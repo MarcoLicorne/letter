@@ -48,14 +48,14 @@
   .eyebrow { display:inline-flex; align-items:center; gap:8px; padding:8px 13px; margin-bottom:24px;
     border:1px solid #ffffff35; border-radius:999px; color:#ffe7fb; background:#ffffff0c;
     font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; }
-  .spark { display:inline-block; animation:twinkle 1.4s ease-in-out infinite alternate; }
+  .spark { display:inline-block; animation:twinkle .55s ease-in-out infinite alternate; }
   @keyframes twinkle { to { transform:rotate(35deg) scale(1.35); filter:drop-shadow(0 0 7px white); } }
   h1 { margin:0; font-weight:900; font-size:clamp(2rem,8.5vw,4.45rem); line-height:1.14; letter-spacing:-.055em; text-wrap:balance; }
   .line { display:block; }
   .gradient { color:transparent; background:linear-gradient(90deg,#fff 0%,#ffb6e8 30%,#a8faff 65%,#ffe9a8 100%); background-size:220% auto;
-    -webkit-background-clip:text; background-clip:text; animation:shine 4s linear infinite; }
+    -webkit-background-clip:text; background-clip:text; animation:shine 1.15s linear infinite; }
   @keyframes shine { to { background-position:220% center; } }
-  .name { display:inline-block; color:#fff; text-shadow:0 0 12px #ff4fb8,0 0 32px #ff4fb86e; animation:namePulse 1.7s ease-in-out infinite; }
+  .name { display:inline-block; color:#fff; text-shadow:0 0 12px #ff4fb8,0 0 32px #ff4fb86e; animation:namePulse .72s ease-in-out infinite; }
   @keyframes namePulse { 50% { text-shadow:0 0 20px #ff4fb8,0 0 48px #ff4fb8a8; transform:scale(1.035); } }
   .emoji-row { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin:27px 0 22px; font-size:clamp(1.8rem,7vw,3rem); }
   .emoji-row span { display:inline-block; filter:drop-shadow(0 0 9px #ffffff30); animation:emojiBounce 1.3s ease-in-out infinite; }
@@ -71,10 +71,56 @@
   .footer { position:fixed; bottom:max(12px,env(safe-area-inset-bottom)); left:0; right:0; text-align:center; color:#d7c8e8a8; font-size:.72rem; letter-spacing:.08em; }
   .burst { position:fixed; z-index:5; pointer-events:none; font-size:24px; animation:burst 1.2s ease-out forwards; }
   @keyframes burst { 0% { opacity:1; transform:translate(0,0) scale(.5) rotate(0); } 100% { opacity:0; transform:translate(var(--dx),var(--dy)) scale(1.5) rotate(var(--rot)); } }
+
+  /* Grande clé royale flottante, déplaçable au doigt ou à la souris */
+  #floatingKey {
+    position:fixed; z-index:2; left:4%; top:13%; width:clamp(112px,31vw,205px);
+    cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
+    filter:drop-shadow(0 0 10px #ffe49b88) drop-shadow(0 0 26px #ffbf4a55);
+    opacity:.88; animation:keyDrift 4.2s ease-in-out infinite;
+  }
+  #floatingKey:active { cursor:grabbing; }
+  #floatingKey svg { display:block; width:100%; height:auto; overflow:visible; }
+  #floatingKey .key-glint { animation:keyGlint .85s ease-in-out infinite alternate; }
+  @keyframes keyDrift { 0%,100% { transform:translateY(0) rotate(-8deg); } 50% { transform:translateY(-18px) rotate(3deg); } }
+  @keyframes keyGlint { from { opacity:.35; } to { opacity:1; } }
+  .drag-hint { position:fixed; z-index:2; left:12px; bottom:34px; padding:7px 10px; border-radius:20px;
+    color:#f9eaff; font-size:11px; letter-spacing:.04em; background:#ffffff12; border:1px solid #ffffff30;
+    backdrop-filter:blur(8px); pointer-events:none; animation:hintFade 5s ease 2s forwards; }
+  @keyframes hintFade { to { opacity:0; } }
+  @media (max-width:420px) { #floatingKey { width:clamp(100px,29vw,145px); left:2%; top:10%; } }
+
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; } }
 </style>
 </head>
 <body>
+
+<aside id="floatingKey" aria-label="Clé royale décorative déplaçable" title="Déplace-moi !" tabindex="0">
+  <svg viewBox="0 0 100 240" role="img" aria-label="Grande clé dorée ornée">
+    <defs>
+      <linearGradient id="keyGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2b2"/><stop offset=".25" stop-color="#f1d27a"/><stop offset=".55" stop-color="#b8862f"/><stop offset=".8" stop-color="#ffe8a0"/><stop offset="1" stop-color="#6e4a14"/></linearGradient>
+      <radialGradient id="keyGem"><stop offset="0" stop-color="#fff9d9"/><stop offset=".45" stop-color="#ffcf67"/><stop offset="1" stop-color="#9b5cff"/></radialGradient>
+    </defs>
+    <g fill="none" stroke="url(#keyGold)" stroke-width="5">
+      <circle cx="50" cy="39" r="28"/><circle cx="50" cy="39" r="19" stroke-width="2"/>
+      <path d="M50 11V5M50 67V73M22 39H16M78 39H84" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g fill="url(#keyGold)" stroke="#fff0ad" stroke-width=".7">
+      <path d="M50 19C60 29 58 42 50 53C42 42 40 29 50 19Z"/>
+      <path d="M46 48C37 39 26 42 25 51C25 60 35 62 46 56Z"/>
+      <path d="M54 48C63 39 74 42 75 51C75 60 65 62 54 56Z"/>
+      <circle cx="50" cy="39" r="5" fill="url(#keyGem)"/>
+      <path d="M36 70H64L68 80H32Z"/><rect x="39" y="79" width="22" height="8" rx="2"/>
+      <rect x="45" y="85" width="10" height="126" rx="4"/>
+      <path d="M42 111H58V118H42ZM42 146H58V153H42Z"/>
+      <path d="M54 174H79V184H68V193H80V203H68V212H80V223H54Z"/>
+      <path class="key-glint" d="M48 91V166" fill="none" stroke="#fff7d0" stroke-width="1.7" stroke-linecap="round"/>
+    </g>
+    <g fill="#fff0b0"><circle cx="18" cy="20" r="2"/><circle cx="82" cy="64" r="1.8"/><path d="M83 104l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+  </svg>
+</aside>
+<div class="drag-hint" id="dragHint">✦ Déplace la clé avec ton doigt ✦</div>
+
 <canvas id="particles" aria-hidden="true"></canvas>
 <div class="aurora a"></div><div class="aurora b"></div>
 <main>
@@ -148,6 +194,33 @@
     burst(e.clientX,e.clientY);
   });
   setTimeout(()=>burst(innerWidth/2,innerHeight/2),650);
+
+  // Clé royale librement déplaçable (souris et écran tactile)
+  const floatingKey = document.getElementById('floatingKey');
+  const dragHint = document.getElementById('dragHint');
+  let keyDragging = false, keyMoved = false, keyPointerX = 0, keyPointerY = 0, keyLeft = 0, keyTop = 0;
+  floatingKey.addEventListener('pointerdown', (e) => {
+    keyDragging = true; keyMoved = false;
+    const r = floatingKey.getBoundingClientRect();
+    keyPointerX = e.clientX; keyPointerY = e.clientY; keyLeft = r.left; keyTop = r.top;
+    floatingKey.style.animation = 'none';
+    floatingKey.style.left = r.left + 'px'; floatingKey.style.top = r.top + 'px';
+    floatingKey.style.right = 'auto'; floatingKey.style.bottom = 'auto';
+    floatingKey.setPointerCapture(e.pointerId); e.preventDefault();
+    dragHint.style.opacity = '0';
+  });
+  floatingKey.addEventListener('pointermove', (e) => {
+    if (!keyDragging) return;
+    const dx = e.clientX-keyPointerX, dy = e.clientY-keyPointerY;
+    if (Math.abs(dx)+Math.abs(dy)>3) keyMoved = true;
+    const maxX = Math.max(0, innerWidth-floatingKey.offsetWidth), maxY = Math.max(0, innerHeight-floatingKey.offsetHeight);
+    floatingKey.style.left = Math.max(0,Math.min(maxX,keyLeft+dx))+'px';
+    floatingKey.style.top = Math.max(0,Math.min(maxY,keyTop+dy))+'px';
+  });
+  function releaseKey(){ if(!keyDragging) return; keyDragging=false; if(keyMoved) floatingKey.style.animation='keyDrift 4.2s ease-in-out infinite'; }
+  floatingKey.addEventListener('pointerup',releaseKey);
+  floatingKey.addEventListener('pointercancel',releaseKey);
+  floatingKey.addEventListener('keydown',e=>{ const step=e.shiftKey?24:10; let x=parseFloat(floatingKey.style.left)||floatingKey.getBoundingClientRect().left; let y=parseFloat(floatingKey.style.top)||floatingKey.getBoundingClientRect().top; if(e.key==='ArrowLeft')x-=step;else if(e.key==='ArrowRight')x+=step;else if(e.key==='ArrowUp')y-=step;else if(e.key==='ArrowDown')y+=step;else return; e.preventDefault(); floatingKey.style.animation='none'; floatingKey.style.left=Math.max(0,Math.min(innerWidth-floatingKey.offsetWidth,x))+'px'; floatingKey.style.top=Math.max(0,Math.min(innerHeight-floatingKey.offsetHeight,y))+'px'; floatingKey.style.right='auto'; });
 })();
 </script>
 </body>
