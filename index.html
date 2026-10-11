@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0710">
+<meta name="theme-color" content="#07030e">
 <title>✦</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -267,6 +267,119 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .dg{font-size:24px}
   .sheet{padding:64px 46px 60px 20px}
 }
+/* =====================  THÈME : ROYAL SOMBRE  ===================== */
+html,body{background:#07030e}
+@media (min-width:521px){body,html{background:#030108}}
+#stage{background:#07030e}
+
+/* ciel : pourpre, bordeaux et or */
+.sky-day{background:linear-gradient(#0d0620 0,#2a0f3d 28%,#5c1a45 48%,#9a2f4a 62%,#d4893f 74%,#f0c46a 100%)}
+.sky-dusk{background:linear-gradient(#07041a 0,#1d0f40 30%,#4a1646 52%,#7a1f3d 64%,#b8602f 74%)}
+.sky-night{background:linear-gradient(#020108 0,#080520 40%,#150a3a 62%,#2a1050 76%)}
+.sun{background:radial-gradient(circle,#fff0b8 0,#f0b84a 35%,rgba(220,140,50,0) 70%)}
+.cloud{background:radial-gradient(ellipse,rgba(92,30,110,.9) 0,rgba(92,30,110,0) 70%)}
+.moon{background:radial-gradient(circle at 35% 35%,#fff6d6,#ecd896 60%,#c9ae62);box-shadow:0 0 34px 12px rgba(240,200,110,.32)}
+
+/* paysage */
+.mt1{fill:#6a4688}.mt2{fill:#432a68}.lake{fill:#8a3050}
+.dusk .mt1{fill:#432a66}.dusk .mt2{fill:#2c1a4c}.dusk .lake{fill:#4e1b3e}
+.night .mt1{fill:#140c34}.night .mt2{fill:#0b0724}.night .lake{fill:#0c0828}
+.vine{filter:brightness(.85) saturate(.8)}
+.dusk .vine{filter:brightness(.6) saturate(.8)}
+.night .vine{filter:brightness(.38) saturate(.8)}
+.rail{filter:brightness(.55) saturate(.8)}
+.dusk .rail{filter:brightness(.38) saturate(.8)}
+.night .rail{filter:brightness(.24) saturate(.8)}
+
+/* fenêtre : velours bordeaux, cadre sombre filet d'or */
+.wp{background:var(--noise),linear-gradient(#170a26,#08040f)}
+.hole-b{border-color:#150b22;box-shadow:inset 0 0 0 2px #b8903a,inset 0 0 22px rgba(0,0,0,.85),0 0 0 2px #050208}
+.sash{border-color:#150b22;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.1),transparent 45%),
+    linear-gradient(90deg,transparent calc(50% - 2px),#150b22 calc(50% - 2px),#150b22 calc(50% + 2px),transparent calc(50% + 2px)),
+    repeating-linear-gradient(180deg,transparent 0 calc(20% - 3px),#150b22 calc(20% - 3px) 20%),
+    rgba(150,120,220,.07)}
+.curtain{background:linear-gradient(rgba(0,0,0,.5),transparent 25%,transparent 70%,rgba(0,0,0,.45)),
+  repeating-linear-gradient(90deg,#2a0610 0 8px,#6a1228 8px 17px,#390814 17px 24px)}
+.sill{background:var(--noise),linear-gradient(#6a5a7c,#241a34)}
+.wglow{background:radial-gradient(circle at 6% 66%,rgba(255,170,70,.24),transparent 30%),radial-gradient(circle at 94% 66%,rgba(255,170,70,.24),transparent 30%)}
+.hint{color:#f0d9a0;text-shadow:0 0 18px rgba(230,180,80,.75)}
+
+/* enveloppe : bordeaux nuit, filets d'or */
+#envLayer{background:
+  radial-gradient(circle at 80% 38%,rgba(255,190,110,.5) 0 5px,rgba(255,190,110,.14) 16px,transparent 30px),
+  radial-gradient(circle at 70% 24%,rgba(255,170,90,.3) 0 4px,transparent 22px),
+  radial-gradient(circle at 20% 28%,rgba(255,200,130,.22) 0 6px,transparent 26px),
+  radial-gradient(ellipse at 50% 40%,#2a0f36 0,#06020c 78%)}
+.ledge{border-top:2px solid rgba(214,170,80,.3);background:var(--noise),linear-gradient(#2c1a3c,#0b0613)}
+.e-back{background:var(--noise),linear-gradient(135deg,#3a0f2a,#1b0a28);
+  box-shadow:0 18px 40px rgba(0,0,0,.8),inset 0 0 0 1.5px rgba(214,170,80,.55),inset 0 0 26px rgba(0,0,0,.6)}
+.e-paper{background:var(--fibers),var(--noise),linear-gradient(#e6d09a,#bf9d5c)}
+.f-l{background:var(--noise),linear-gradient(120deg,#4a1432,#2a0c26)}
+.f-r{background:var(--noise),linear-gradient(240deg,#3e1030,#22091f)}
+.f-b{background:var(--noise),linear-gradient(0deg,#52173a,#33102e)}
+.e-front{filter:drop-shadow(0 -1px 2px rgba(214,170,80,.45))}
+.e-flap i{background:var(--noise),linear-gradient(#5e1b40,#36102e)}
+.e-name{position:absolute;left:0;right:0;bottom:10%;z-index:5;text-align:center;pointer-events:none;
+  font-family:'Homemade Apple','Cormorant Garamond',cursive;font-style:normal;font-weight:400;
+  font-size:clamp(19px,5.8vw,25px);color:#f0d27a;transform:rotate(-2deg);
+  text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 12px rgba(230,180,80,.45)}
+
+/* lettre : velours sombre, encre d'or */
+#letter{background:#07030c}
+#letterBg{background:
+  radial-gradient(circle at 92% 88%,rgba(255,160,60,.26),transparent 38%),
+  radial-gradient(circle at 6% 62%,rgba(255,160,60,.15),transparent 34%),
+  var(--noise),linear-gradient(180deg,#1c0a26,#06030b)}
+.sheet{color:#f0d9a0;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(0,0,0,.3) 0 2px,transparent 4px),
+    radial-gradient(circle at 42% 82%,rgba(0,0,0,.3) 0 2.5px,transparent 5px),
+    radial-gradient(circle at 12% 88%,rgba(0,0,0,.4),transparent 90px),
+    radial-gradient(circle at 96% 6%,rgba(0,0,0,.45),transparent 80px),
+    var(--noise),
+    radial-gradient(ellipse at 50% 40%,#4c1632 0,#34102b 55%,#1b0818 100%);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.7),inset 0 0 110px rgba(0,0,0,.5)}
+.sheet::before{content:'';position:absolute;inset:12px 16px;border:1px solid rgba(214,170,80,.5);pointer-events:none;
+  box-shadow:inset 0 0 0 4px rgba(0,0,0,0),inset 0 0 0 5px rgba(214,170,80,.18)}
+.crown g,.fleur g{stroke:#d6aa50}
+.crown>path,.crown>rect,.crown>circle,.fleur>path{fill:#d6aa50}
+.crown,.fleur{opacity:.9}
+.t,.u b,.lb{color:#f0d9a0}
+.t{text-shadow:0 0 12px rgba(214,170,80,.3)}
+.note{color:#c9a56a}
+.oups{color:rgba(196,176,245,.92);text-shadow:0 0 6px rgba(120,90,200,.4)}
+
+/* signature */
+.sign{margin-top:20px;text-align:right;opacity:0;padding-right:4px}
+.sign b{display:inline-block;font-family:'Homemade Apple','Cormorant Garamond',cursive;font-style:normal;font-weight:400;
+  font-size:clamp(25px,7.2vw,31px);color:#f0d27a;transform:rotate(-4deg);
+  text-shadow:0 0 14px rgba(230,180,80,.5)}
+.sign svg{display:block;width:104px;height:12px;margin:2px 0 0 auto;overflow:visible}
+.sign path{fill:none;stroke:#d6aa50;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:130;stroke-dashoffset:130}
+.shadow.in .sign{animation:ink 1.6s ease 9.4s both}
+.shadow.in .sign path{animation:draw 1.4s ease 10.4s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.sign path{stroke-dashoffset:0}}
+
+/* pétales dorés */
+#petals{position:fixed;top:0;bottom:0;left:var(--gut);right:var(--gut);z-index:40;pointer-events:none;overflow:hidden}
+.petal{position:absolute;top:-8%;width:var(--s);height:calc(var(--s)*1.35);opacity:0;will-change:transform,opacity;
+  border-radius:85% 8% 85% 8%;
+  background:radial-gradient(ellipse at 30% 25%,#fff3b0 0,#f4cf4a 45%,#c9951c 100%);
+  box-shadow:0 0 6px rgba(255,200,80,.45);
+  animation:petalfall var(--d) cubic-bezier(.35,.1,.55,.9) var(--dl) forwards}
+@keyframes petalfall{
+  0%{opacity:0;transform:translate3d(0,0,0) rotate(0) rotateX(0)}
+  8%{opacity:1}
+  25%{transform:translate3d(calc(var(--dx)*.4),28vh,0) rotate(calc(var(--r)*.3)) rotateX(70deg)}
+  50%{transform:translate3d(calc(var(--dx)*-.2),58vh,0) rotate(calc(var(--r)*.6)) rotateX(-50deg)}
+  75%{transform:translate3d(calc(var(--dx)*.8),88vh,0) rotate(calc(var(--r)*.85)) rotateX(60deg)}
+  92%{opacity:1}
+  100%{opacity:0;transform:translate3d(var(--dx),118vh,0) rotate(var(--r)) rotateX(0)}}
+@media (prefers-reduced-motion:reduce){#petals{display:none}}
+
 #snd{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,calc(var(--gut) + 10px));z-index:50;width:38px;height:38px;border-radius:50%;
   background:rgba(20,10,20,.55);border:1px solid rgba(240,217,160,.35);color:#f0d9a0;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;font-style:normal}
 </style>
@@ -437,9 +550,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
       <div class="e-paper"></div>
       <div class="e-front"><i class="f-l"></i><i class="f-r"></i><i class="f-b"></i></div>
       <div class="e-flap"><i></i></div>
+      <div class="e-name">Roxane</div>
       <div class="seal">
         <svg viewBox="0 0 100 100" aria-hidden="true">
-          <defs><radialGradient id="wax" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#d94654"/><stop offset=".55" stop-color="#a51b2b"/><stop offset="1" stop-color="#5e0b16"/></radialGradient></defs>
+          <defs><radialGradient id="wax" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".55" stop-color="#b8862f"/><stop offset="1" stop-color="#5a3a0e"/></radialGradient></defs>
           <path d="M50 5C64 3 74 11 84 19C96 29 99 45 94 58C93 74 82 91 66 95C54 100 40 98 27 91C13 83 5 68 6 52C7 35 14 21 28 12C34 8 42 6 50 5Z" fill="url(#wax)"/>
           <path d="M50 5C64 3 74 11 84 19C96 29 99 45 94 58" fill="none" stroke="rgba(255,190,185,.35)" stroke-width="2" stroke-linecap="round"/>
           <circle cx="50" cy="50" r="31" fill="none" stroke="rgba(60,5,12,.5)" stroke-width="3"/>
@@ -509,6 +623,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
             <div class="u"><b id="s">5</b><span class="lb">s</span></div>
           </div>
           <p class="note">Oups… une tache d'encre a caché le nombre de jours.</p>
+          <div class="sign">
+            <b>Marco</b>
+            <svg viewBox="0 0 120 14" aria-hidden="true"><path d="M4 10C30 2 58 13 116 4"/></svg>
+          </div>
         </div>
         <svg class="fleur" viewBox="0 0 200 24" aria-hidden="true">
           <g fill="none" stroke="#7a5a30" stroke-width="1.2" stroke-linecap="round">
@@ -637,12 +755,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     }, 1400);
   });
 
+  /* --- pétales dorés à l'ouverture --- */
+  function goldPetals() {
+    const layer = document.createElement('div');
+    layer.id = 'petals';
+    document.body.appendChild(layer);
+    const n = 46;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('i');
+      p.className = 'petal';
+      const s = 9 + Math.random() * 11, d = 5 + Math.random() * 4, dl = Math.random() * 3.2;
+      p.style.cssText = `left:${(Math.random()*100).toFixed(1)}%;--s:${s.toFixed(1)}px;--d:${d.toFixed(2)}s;--dl:${dl.toFixed(2)}s;` +
+        `--dx:${((Math.random()-.5)*160).toFixed(0)}px;--r:${((Math.random()<.5?-1:1)*(240+Math.random()*420)).toFixed(0)}deg`;
+      layer.appendChild(p);
+    }
+    setTimeout(() => layer.remove(), 10500);
+  }
+
   /* --- enveloppe → lettre --- */
   let opened = false;
   env.addEventListener('click', () => {
     if (opened) return; opened = true;
     hint2.classList.remove('show');
     box.classList.add('open');
+    goldPetals();
     setTimeout(() => {
       startCountdown();
       letter.classList.add('show');
