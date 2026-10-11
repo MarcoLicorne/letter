@@ -112,14 +112,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hole{position:absolute;left:12%;right:12%;top:4.5%;bottom:31%;perspective:1000px}
 .hole-b{position:absolute;inset:-11px;border:11px solid #2b1811;border-radius:2px;pointer-events:none;z-index:3;
   box-shadow:inset 0 0 0 2px #4d2f1e,inset 0 0 22px rgba(0,0,0,.8),0 0 0 2px #080406}
-.sash{position:absolute;top:0;bottom:0;width:27%;border:7px solid #2b1811;z-index:2;transition:transform 1s ease-in-out;
+.sash{position:absolute;top:0;bottom:0;width:50%;border:7px solid #2b1811;z-index:2;transition:transform 1.2s cubic-bezier(.4,.05,.25,1),box-shadow .3s;cursor:pointer;
   background:
     linear-gradient(135deg,rgba(255,255,255,.1),transparent 45%),
     linear-gradient(90deg,transparent calc(50% - 2px),#2b1811 calc(50% - 2px),#2b1811 calc(50% + 2px),transparent calc(50% + 2px)),
     repeating-linear-gradient(180deg,transparent 0 calc(20% - 3px),#2b1811 calc(20% - 3px) 20%),
     rgba(120,140,190,.07)}
+.sash::after{content:'';position:absolute;inset:0;background:transparent;transition:background .3s;pointer-events:none}
+.sash:active::after{background:rgba(255,200,80,.08)}
 .sash.l{left:0;transform-origin:0 50%}.sash.r{right:0;transform-origin:100% 50%}
-.opening .sash.l{transform:rotateY(78deg)}.opening .sash.r{transform:rotateY(-78deg)}
+.sash.touched{box-shadow:inset 0 0 30px rgba(255,200,80,.15)}
+.sash.open-l{transform:rotateY(78deg)}
+.sash.open-r{transform:rotateY(-78deg)}
 .curtain{position:absolute;top:0;height:71%;width:22%;z-index:4;
   background:linear-gradient(rgba(0,0,0,.45),transparent 25%,transparent 70%,rgba(0,0,0,.4)),
              repeating-linear-gradient(90deg,#0b0508 0 8px,#2c1a25 8px 17px,#130a10 17px 24px)}
@@ -140,6 +144,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .orn{width:150px;height:18px}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 #hint1{position:absolute;left:0;right:0;top:7%;z-index:12}
+#hintWin{position:absolute;left:0;right:0;top:7%;z-index:12}
 
 /* ---------- ENVELOPPE ---------- */
 #envLayer{position:fixed;top:0;bottom:0;left:var(--gut);right:var(--gut);z-index:10;display:flex;align-items:center;justify-content:center;padding-top:8%;overflow:hidden;
@@ -156,7 +161,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #envLayer.show .pg2{opacity:1;transform:none}
 .feather{position:absolute;right:9%;bottom:33%;width:74px;transform:rotate(-12deg);z-index:1}
 .vine2{position:absolute;right:-10%;bottom:30%;width:44%;height:44%;opacity:.8;filter:brightness(.6)}
-.env{width:min(76vw,330px);aspect-ratio:1.45;position:relative;z-index:2;opacity:0;transform:translateY(60px) scale(.9)}
+.env{width:min(76vw,330px);aspect-ratio:1.45;position:relative;z-index:2;opacity:0;transform:translateY(60px) scale(.9);cursor:pointer}
 #envLayer.show .env{animation:drop 1.4s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes drop{to{opacity:1;transform:none}}
 .box{position:absolute;inset:0;perspective:900px;animation:float 4s ease-in-out infinite}
@@ -181,12 +186,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:var(--noise),var(--mottle),linear-gradient(#eedeb8,#d6bf8c)}
 .open .e-flap{transform:rotateX(180deg);z-index:1}
 .seal{position:absolute;left:50%;top:56%;width:23%;aspect-ratio:1;margin:-11.5% 0 0 -11.5%;z-index:6;
-  filter:drop-shadow(0 4px 4px rgba(0,0,0,.55));transition:transform .5s,opacity .5s}
+  filter:drop-shadow(0 4px 4px rgba(0,0,0,.55));transition:transform .5s,opacity .5s;pointer-events:none}
 .seal svg{display:block;width:100%;height:100%;overflow:visible}
 .open .seal{transform:scale(1.35) rotate(15deg);opacity:0}
 
-/* ---------- SCEAU INTERACTIF (10 TOUCHES, RÉTRÉCISSEMENT + FEU) ---------- */
-.seal{cursor:pointer;pointer-events:auto;
+/* ---------- SCEAU INTERACTIF ---------- */
+.seal{cursor:pointer;pointer-events:none;
   transition:transform .45s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
   --seal-scale:1;
   transform:scale(var(--seal-scale)) rotate(var(--seal-rot,0deg));
@@ -199,7 +204,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 60%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) - 4deg)) translate(-2px,-1px)}
 80%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) + 4deg)) translate(2px,1px)}}
 
-/* couche des flammes */
 .seal-fire{position:absolute;inset:-60%;pointer-events:none;z-index:8;overflow:visible}
 .flame-p{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
   background:radial-gradient(circle at 50% 60%,#fffbe0 0,#ffd166 30%,#ff7a18 60%,rgba(200,40,0,0) 85%);
@@ -218,14 +222,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   100%{opacity:0;transform:translate(var(--sx,0),var(--sy,-50px)) scale(.2)}
 }
 
-/* halo de braise sous le sceau */
 .seal-halo{position:absolute;inset:-40%;border-radius:50%;pointer-events:none;z-index:-1;
   background:radial-gradient(circle,rgba(255,110,20,.55) 0%,rgba(255,60,10,.25) 40%,transparent 70%);
   opacity:0;transition:opacity .4s}
 .seal.hot .seal-halo{opacity:1;animation:haloPulse 1.1s ease-in-out infinite alternate}
 @keyframes haloPulse{from{transform:scale(.9);opacity:.7}to{transform:scale(1.15);opacity:1}}
 
-/* fissures */
 .crack{position:absolute;inset:0;pointer-events:none;z-index:7;opacity:0;transition:opacity .3s}
 .crack.show{opacity:1}
 .crack svg{width:100%;height:100%;overflow:visible}
@@ -264,7 +266,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .body{transform:rotate(-2.5deg);transform-origin:0 0}
 .key{position:absolute;right:-8px;top:46%;width:78px;height:auto;z-index:3;opacity:0;
   filter:drop-shadow(0 6px 5px rgba(0,0,0,.55));transform:rotate(7deg)}
-.in ~ .key{}
 .shadow.in .key{animation:keyin 1.4s ease .5s forwards,keyswing 6s ease-in-out 2s infinite}
 @keyframes keyin{from{opacity:0;transform:translateY(-16px) rotate(-18deg)}to{opacity:1;transform:rotate(7deg)}}
 @keyframes keyswing{0%,100%{transform:rotate(7deg)}50%{transform:rotate(11deg)}}
@@ -314,7 +315,6 @@ html,body{background:#07030e}
 @media (min-width:521px){body,html{background:#030108}}
 #stage{background:#07030e}
 
-/* ciel : pourpre, bordeaux et or */
 .sky-day{background:linear-gradient(#0d0620 0,#2a0f3d 28%,#5c1a45 48%,#9a2f4a 62%,#d4893f 74%,#f0c46a 100%)}
 .sky-dusk{background:linear-gradient(#07041a 0,#1d0f40 30%,#4a1646 52%,#7a1f3d 64%,#b8602f 74%)}
 .sky-night{background:linear-gradient(#020108 0,#080520 40%,#150a3a 62%,#2a1050 76%)}
@@ -322,7 +322,6 @@ html,body{background:#07030e}
 .cloud{background:radial-gradient(ellipse,rgba(92,30,110,.9) 0,rgba(92,30,110,0) 70%)}
 .moon{background:radial-gradient(circle at 35% 35%,#fff6d6,#ecd896 60%,#c9ae62);box-shadow:0 0 34px 12px rgba(240,200,110,.32)}
 
-/* paysage */
 .mt1{fill:#6a4688}.mt2{fill:#432a68}.lake{fill:#8a3050}
 .dusk .mt1{fill:#432a66}.dusk .mt2{fill:#2c1a4c}.dusk .lake{fill:#4e1b3e}
 .night .mt1{fill:#140c34}.night .mt2{fill:#0b0724}.night .lake{fill:#0c0828}
@@ -330,7 +329,6 @@ html,body{background:#07030e}
 .dusk .vine{filter:brightness(.6) saturate(.8)}
 .night .vine{filter:brightness(.38) saturate(.8)}
 
-/* balcon : même teinte que le background (bordeaux/pourpre sombre) */
 .rail{filter:none}
 .dusk .rail{filter:brightness(.85)}
 .night .rail{filter:brightness(.55)}
@@ -342,7 +340,6 @@ html,body{background:#07030e}
 .rail rect[fill="rgba(0,0,0,.25)"]{fill:rgba(0,0,0,.45)}
 .rail rect[fill="rgba(0,0,0,.3)"]{fill:rgba(0,0,0,.5)}
 
-/* fenêtre : velours bordeaux, cadre sombre filet d'or */
 .wp{background:var(--noise),linear-gradient(#170a26,#08040f)}
 .hole-b{border-color:#150b22;box-shadow:inset 0 0 0 2px #b8903a,inset 0 0 22px rgba(0,0,0,.85),0 0 0 2px #050208}
 .sash{border-color:#150b22;
@@ -357,7 +354,6 @@ html,body{background:#07030e}
 .wglow{background:radial-gradient(circle at 6% 66%,rgba(255,170,70,.24),transparent 30%),radial-gradient(circle at 94% 66%,rgba(255,170,70,.24),transparent 30%)}
 .hint{color:#f0d9a0;text-shadow:0 0 18px rgba(230,180,80,.75)}
 
-/* enveloppe : transparente, garde le background visible */
 #envLayer{background:transparent}
 .ledge{border-top:2px solid rgba(214,170,80,.3);
   background:var(--noise),linear-gradient(rgba(44,26,60,.75),rgba(11,6,19,.9));
@@ -375,7 +371,6 @@ html,body{background:#07030e}
   font-size:clamp(19px,5.8vw,25px);color:#f0d27a;transform:rotate(-2deg);
   text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 12px rgba(230,180,80,.45)}
 
-/* lettre : velours sombre, encre d'or */
 #letter{background:#07030c}
 #letterBg{background:
   radial-gradient(circle at 92% 88%,rgba(255,160,60,.26),transparent 38%),
@@ -400,7 +395,6 @@ html,body{background:#07030e}
 .note{color:#c9a56a}
 .oups{color:rgba(196,176,245,.92);text-shadow:0 0 6px rgba(120,90,200,.4)}
 
-/* signature */
 .sign{margin-top:20px;text-align:right;opacity:0;padding-right:4px}
 .sign b{display:inline-block;font-family:'Homemade Apple','Cormorant Garamond',cursive;font-style:normal;font-weight:400;
   font-size:clamp(25px,7.2vw,31px);color:#f0d27a;transform:rotate(-4deg);
@@ -412,7 +406,6 @@ html,body{background:#07030e}
 @keyframes draw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.sign path{stroke-dashoffset:0}}
 
-/* pétales dorés */
 #petals{position:fixed;top:0;bottom:0;left:var(--gut);right:var(--gut);z-index:40;pointer-events:none;overflow:hidden}
 .petal{position:absolute;top:-8%;width:var(--s);height:calc(var(--s)*1.35);opacity:0;will-change:transform,opacity;
   border-radius:85% 8% 85% 8%;
@@ -437,16 +430,19 @@ html,body{background:#07030e}
 #curtainIntro.opening{pointer-events:none}
 .curtain-overlay{position:absolute;inset:0;display:flex;pointer-events:auto;transition:opacity .5s}
 .curtain-overlay.hidden{pointer-events:none;opacity:0}
+/* --- ouverture fluide des rideaux : glissement indépendant + ombre qui s'estompe --- */
 .curtain-panel{position:absolute;top:0;bottom:0;width:50%;z-index:2;
   background:
     repeating-linear-gradient(90deg,#2a0610 0 10px,#6a1228 10px 22px,#390814 22px 30px,#5a1028 30px 40px),
     linear-gradient(180deg,rgba(0,0,0,.5) 0%,transparent 25%,transparent 70%,rgba(0,0,0,.5) 100%);
   box-shadow:inset -20px 0 40px rgba(0,0,0,.5),inset 20px 0 40px rgba(0,0,0,.5);
-  transition:transform 1.8s cubic-bezier(.4,.05,.25,1)}
+  transition:transform 1.6s cubic-bezier(.22,.61,.36,1),box-shadow 1.2s ease;
+  cursor:pointer;will-change:transform}
 .curtain-panel.l{left:0;transform:translateX(0);border-right:2px solid rgba(214,170,80,.4)}
 .curtain-panel.r{right:0;transform:translateX(0);border-left:2px solid rgba(214,170,80,.4)}
-#curtainIntro.opening .curtain-panel.l{transform:translateX(-102%)}
-#curtainIntro.opening .curtain-panel.r{transform:translateX(102%)}
+.curtain-panel.opened-l{transform:translateX(-101%);box-shadow:none}
+.curtain-panel.opened-r{transform:translateX(101%);box-shadow:none}
+.curtain-panel.touched{box-shadow:inset -20px 0 40px rgba(255,200,80,.15),inset 20px 0 40px rgba(255,200,80,.15)}
 .curtain-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:12px;transition:opacity .8s}
 #curtainIntro.opening .curtain-center{opacity:0}
@@ -456,12 +452,37 @@ html,body{background:#07030e}
 @keyframes curtainPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.05);opacity:1}}
 .curtain-orn{width:140px;height:16px;opacity:.8}
 .curtain-tassel{position:absolute;top:48%;width:36px;height:80px;z-index:5;pointer-events:none;
-  transition:opacity .5s}
+  transition:opacity .5s,transform 1.6s cubic-bezier(.22,.61,.36,1)}
 .curtain-tassel.l{left:calc(50% - 22px);transform:translateX(-50%)}
 .curtain-tassel.r{left:calc(50% + 22px);transform:translateX(-50%)}
+/* les glands suivent les rideaux */
+#curtainIntro.opening .curtain-tassel.l,
+.curtain-tassel.l.away{transform:translateX(-50%) translateX(-52vw)}
+#curtainIntro.opening .curtain-tassel.r,
+.curtain-tassel.r.away{transform:translateX(-50%) translateX(52vw)}
 #curtainIntro.opening .curtain-tassel{opacity:0}
 .curtain-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(circle at 50% 50%,rgba(255,200,130,.15),transparent 60%)}
+
+/* ---------- TACHE D'ENCRE INTERACTIVE ---------- */
+.ink-blot{position:relative;cursor:pointer;pointer-events:auto;z-index:5}
+.ink-blot .ink{pointer-events:none}
+.tear-message{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-8deg) scale(0);
+  z-index:10;font-family:'Homemade Apple','Cormorant Garamond',cursive;font-style:normal;
+  font-size:clamp(14px,3.8vw,18px);color:#f0d27a;text-align:center;line-height:1.4;
+  text-shadow:0 0 20px rgba(230,180,80,.9),0 2px 6px rgba(0,0,0,.9);
+  opacity:0;transition:transform .8s cubic-bezier(.34,1.56,.64,1),opacity .6s;
+  white-space:nowrap;pointer-events:none}
+.tear-message.show{transform:translate(-50%,-50%) rotate(-8deg) scale(1);opacity:1}
+.hole-tear{position:absolute;border-radius:50%;background:radial-gradient(circle,#0a0512 0,#06030a 60%,transparent 75%);
+  pointer-events:none;z-index:4;opacity:0;transform:scale(0);
+  transition:opacity .6s,transform .8s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:inset 0 0 20px rgba(0,0,0,.9)}
+.hole-tear.show{opacity:1;transform:scale(1)}
+.hole-tear::after{content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:radial-gradient(circle,transparent 40%,rgba(0,0,0,.4) 60%,transparent 75%)}
+.ink-blot.torn{cursor:default}
+.ink-blot.torn .ink{opacity:.3;transition:opacity .8s}
 </style>
 </head>
 <body>
@@ -512,14 +533,14 @@ html,body{background:#07030e}
   </defs>
 </svg>
 
-<!-- RIDEAU D'INTRODUCTION INTERACTIF -->
+<!-- RIDEAU D'INTRODUCTION INTERACTIF (gauche ou droite, dans n'importe quel ordre) -->
 <div id="curtainIntro">
   <div class="curtain-glow"></div>
   <div class="curtain-overlay" id="curtainOverlay">
-    <div class="curtain-panel l"></div>
-    <div class="curtain-panel r"></div>
+    <div class="curtain-panel l" id="curtainPanelL"></div>
+    <div class="curtain-panel r" id="curtainPanelR"></div>
   </div>
-  <svg class="curtain-tassel l" viewBox="0 0 36 80" aria-hidden="true">
+  <svg class="curtain-tassel l" id="curtainTasselL" viewBox="0 0 36 80" aria-hidden="true">
     <circle cx="18" cy="8" r="4" fill="#e6c36a"/>
     <path d="M12 12H24L26 42H10Z" fill="#c9a24b"/>
     <g stroke="#a67f2e" stroke-width="1"><path d="M13 18V40M18 18V42M23 18V40"/></g>
@@ -529,7 +550,7 @@ html,body{background:#07030e}
     </g>
     <circle cx="12" cy="74" r="2.5" fill="#e6c36a"/><circle cx="18" cy="76" r="2.5" fill="#e6c36a"/><circle cx="24" cy="74" r="2.5" fill="#e6c36a"/>
   </svg>
-  <svg class="curtain-tassel r" viewBox="0 0 36 80" aria-hidden="true">
+  <svg class="curtain-tassel r" id="curtainTasselR" viewBox="0 0 36 80" aria-hidden="true">
     <circle cx="18" cy="8" r="4" fill="#e6c36a"/>
     <path d="M12 12H24L26 42H10Z" fill="#c9a24b"/>
     <g stroke="#a67f2e" stroke-width="1"><path d="M13 18V40M18 18V42M23 18V40"/></g>
@@ -540,7 +561,7 @@ html,body{background:#07030e}
     <circle cx="12" cy="74" r="2.5" fill="#e6c36a"/><circle cx="18" cy="76" r="2.5" fill="#e6c36a"/><circle cx="24" cy="74" r="2.5" fill="#e6c36a"/>
   </svg>
   <div class="curtain-center">
-    <div class="curtain-hint">Touche les rideaux</div>
+    <div class="curtain-hint" id="curtainHint">Touche les rideaux</div>
     <svg class="curtain-orn"><use href="#orn"/></svg>
   </div>
 </div>
@@ -624,7 +645,8 @@ html,body{background:#07030e}
   <div class="interior" id="interior">
     <div class="wp w-t"></div><div class="wp w-b"></div><div class="wp w-l"></div><div class="wp w-r"></div>
     <div class="hole">
-      <div class="sash l"></div><div class="sash r"></div>
+      <div class="sash l" id="sashL"></div>
+      <div class="sash r" id="sashR"></div>
       <div class="hole-b"></div>
     </div>
     <div class="curtain l"></div><div class="curtain r"></div>
@@ -645,6 +667,7 @@ html,body{background:#07030e}
   </div>
 
   <div class="hint" id="hint1"><span>Touche le pigeon</span><svg class="orn"><use href="#orn"/></svg></div>
+  <div class="hint" id="hintWin"><span>Touche les fenêtres</span><svg class="orn"><use href="#orn"/></svg></div>
 </div>
 
 <div id="envLayer">
@@ -713,7 +736,7 @@ html,body{background:#07030e}
           <p class="t">Selon les lois anciennes du royaume, toute clé confiée doit être restituée avant le :</p>
           <div class="cd">
             <div class="u">
-              <span class="days">
+              <span class="days ink-blot" id="inkBlot">
                 <svg class="ink" viewBox="0 0 130 80" aria-hidden="true">
                   <defs>
                     <filter id="rag" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter>
@@ -732,6 +755,8 @@ html,body{background:#07030e}
                     <path d="M16 46C8 52 4 58 3 64" fill="none" stroke="#0a0612" stroke-width="2.2" stroke-linecap="round"/>
                   </g>
                 </svg>
+                <div class="hole-tear" id="holeTear"></div>
+                <div class="tear-message" id="tearMessage">L'encre était encore humide</div>
               </span><span class="lb">Jours</span>
             </div>
             <div class="u"><b id="h">2</b><span class="lb">h</span></div>
@@ -760,10 +785,16 @@ html,body{background:#07030e}
 (() => {
   const $ = s => document.querySelector(s);
   const stage = $('#stage'), scene = $('#scene'), pigeon = $('#pigeon'), hint1 = $('#hint1'), hint2 = $('#hint2'),
+        hintWin = $('#hintWin'),
         interior = $('#interior'), envLayer = $('#envLayer'), env = $('#env'), box = $('#box'),
         letter = $('#letter'), sheet = $('#sheet'), shadow = $('#shadow'),
         curtainIntro = $('#curtainIntro'), curtainOverlay = $('#curtainOverlay'),
-        seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire');
+        curtainPanelL = $('#curtainPanelL'), curtainPanelR = $('#curtainPanelR'),
+        curtainTasselL = $('#curtainTasselL'), curtainTasselR = $('#curtainTasselR'),
+        curtainHint = $('#curtainHint'),
+        sashL = $('#sashL'), sashR = $('#sashR'),
+        seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire'),
+        inkBlot = $('#inkBlot'), holeTear = $('#holeTear'), tearMessage = $('#tearMessage');
 
   /* --- musique --- */
   const bgm = $('#bgm'), snd = $('#snd'); let muted = false;
@@ -890,10 +921,7 @@ html,body{background:#07030e}
   }
 
   /* ============================================================
-     SCEAU DE CIRE : 10 TOUCHES
-     - rétrécit progressivement (scale 1 → 0.35)
-     - effet de feu : flammes + braises + halo + glow
-     - fissures apparaissent progressivement
+     SCEAU DE CIRE : 10 TOUCHES (via l'enveloppe entière)
      ============================================================ */
   let sealTouches = 0;
   const TOUCHES_REQUISES = 10;
@@ -912,7 +940,6 @@ html,body{background:#07030e}
     "Dernière fois..."
   ];
 
-  /* --- flammes --- */
   function spawnFire(count = 6, power = 1) {
     for (let i = 0; i < count; i++) {
       const f = document.createElement('i');
@@ -928,7 +955,6 @@ html,body{background:#07030e}
       sealFire.appendChild(f);
       setTimeout(() => f.remove(), 1400);
     }
-    /* braises */
     for (let i = 0; i < 8; i++) {
       const s = document.createElement('i');
       s.className = 'spark';
@@ -942,7 +968,6 @@ html,body{background:#07030e}
     }
   }
 
-  /* --- fissures progressives --- */
   function updateCracks(n) {
     const svgNS = 'http://www.w3.org/2000/svg';
     let svg = crack.querySelector('svg');
@@ -985,40 +1010,32 @@ html,body{background:#07030e}
   }
 
   function updateSeal() {
+    if (sealTouches >= TOUCHES_REQUISES) return;
     sealTouches++;
 
-    /* scale progressif : 1 → 0.35 sur 10 touches */
     const t = sealTouches / TOUCHES_REQUISES;
-    const scale = 1 - t * 0.65; // 1 → 0.35
+    const scale = 1 - t * 0.65;
     const rot = (Math.random() * 8 - 4) * t;
     seal.style.setProperty('--seal-scale', scale.toFixed(3));
     seal.style.setProperty('--seal-rot', rot.toFixed(2) + 'deg');
 
-    /* animation de secousse */
     seal.classList.add('shake');
     setTimeout(() => seal.classList.remove('shake'), 320);
 
-    /* effet de feu (croissant) */
     const power = 0.5 + t * 1.3;
     spawnFire(4 + Math.floor(t * 8), power);
 
-    /* glow de plus en plus fort */
     seal.classList.add('burn', 'hot');
     clearTimeout(seal._burnTO);
     seal._burnTO = setTimeout(() => seal.classList.remove('burn'), 450);
 
-    /* fissures */
     updateCracks(sealTouches);
 
-    /* texte d'invite */
     const idx = Math.min(sealTouches, HINT_TEXTS.length - 1);
     hint2.querySelector('span').textContent = HINT_TEXTS[idx];
 
-    /* animation "pulse" pour la dernière */
     if (sealTouches >= TOUCHES_REQUISES) {
-      seal.style.pointerEvents = 'none';
       hint2.classList.remove('show');
-      /* dernière explosion de feu */
       spawnFire(30, 2.2);
       setTimeout(() => {
         box.classList.add('open');
@@ -1034,37 +1051,184 @@ html,body{background:#07030e}
     }
   }
 
-  seal.addEventListener('click', (e) => {
+  /* L'enveloppe entière est cliquable : chaque toucher compte pour le sceau */
+  env.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (sealTouches >= TOUCHES_REQUISES) return;
     updateSeal();
   });
-  seal.addEventListener('touchstart', (e) => {
+  env.addEventListener('touchstart', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    if (sealTouches >= TOUCHES_REQUISES) return;
     updateSeal();
   }, { passive: false });
 
-  /* --- RIDEAU INTERACTIF --- */
-  let curtainOpened = false;
-  function openCurtain() {
-    if (curtainOpened) return;
-    curtainOpened = true;
+  /* ============================================================
+     RIDEAU INTERACTIF : gauche OU droite, dans n'importe quel ordre
+     La séquence continue dès que les DEUX sont ouverts
+     ============================================================ */
+  let curtainLeftOpened = false;
+  let curtainRightOpened = false;
+  let curtainOpening = false;
+
+  /* Met à jour le texte d'invite selon ce qui reste à ouvrir */
+  function updateCurtainHint() {
+    if (curtainLeftOpened && curtainRightOpened) return;
+    if (!curtainLeftOpened && !curtainRightOpened) {
+      curtainHint.textContent = 'Touche les rideaux';
+    } else if (!curtainLeftOpened) {
+      curtainHint.textContent = 'Touche le rideau gauche';
+    } else {
+      curtainHint.textContent = 'Touche le rideau droit';
+    }
+  }
+
+  function checkCurtainsDone() {
+    if (curtainLeftOpened && curtainRightOpened && !curtainOpening) {
+      /* Les deux rideaux sont ouverts : on efface le texte et on enchaîne */
+      curtainHint.style.opacity = '0';
+      curtainHint.style.transition = 'opacity .5s';
+      const center = curtainIntro.querySelector('.curtain-center');
+      if (center) center.style.opacity = '0';
+      setTimeout(startWindowSequence, 1200);
+    }
+  }
+
+  function openCurtainLeft() {
+    if (curtainLeftOpened || curtainOpening) return;
+    curtainLeftOpened = true;
+    curtainPanelL.classList.add('opened-l');
+    curtainPanelL.classList.add('touched');
+    curtainTasselL.classList.add('away');
+    updateCurtainHint();
+    checkCurtainsDone();
+  }
+
+  function openCurtainRight() {
+    if (curtainRightOpened || curtainOpening) return;
+    curtainRightOpened = true;
+    curtainPanelR.classList.add('opened-r');
+    curtainPanelR.classList.add('touched');
+    curtainTasselR.classList.add('away');
+    updateCurtainHint();
+    checkCurtainsDone();
+  }
+
+  /* Apparition de la fenêtre FERMÉE : pas de zoom automatique */
+  function startWindowSequence() {
+    if (curtainOpening) return;
+    curtainOpening = true;
     curtainIntro.classList.add('opening');
     setTimeout(() => { stage.classList.add('dusk'); }, 800);
     setTimeout(() => { stage.classList.add('night'); }, 3200);
-    setTimeout(() => { interior.classList.add('opening'); }, 6600);
-    setTimeout(() => { interior.classList.add('out'); }, 7400);
-    setTimeout(fly, 8600);
-    setTimeout(() => interior.remove(), 10600);
+    setTimeout(() => {
+      interior.classList.add('opening');
+      /* Afficher le texte "Touche les fenêtres" */
+      setTimeout(() => hintWin.classList.add('show'), 1200);
+    }, 6600);
     setTimeout(() => { curtainIntro.style.display = 'none'; }, 2600);
   }
 
-  curtainOverlay.addEventListener('click', openCurtain);
-  curtainIntro.addEventListener('click', openCurtain);
-  curtainOverlay.addEventListener('touchstart', openCurtain, { passive: true });
-  curtainIntro.addEventListener('touchstart', openCurtain, { passive: true });
+  curtainPanelL.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCurtainLeft();
+  });
+  curtainPanelL.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    openCurtainLeft();
+  }, { passive: false });
+
+  curtainPanelR.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCurtainRight();
+  });
+  curtainPanelR.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    openCurtainRight();
+  }, { passive: false });
+
+  /* ============================================================
+     FENÊTRE FERMÉE À 100% : toucher gauche puis droite
+     Le zoom ne démarre qu'après les DEUX ouvertures
+     ============================================================ */
+  let sashLeftOpened = false;
+  let sashRightOpened = false;
+  let windowZoomStarted = false;
+
+  function startWindowZoom() {
+    if (windowZoomStarted) return;
+    windowZoomStarted = true;
+    hintWin.classList.remove('show');
+    setTimeout(() => {
+      if (!interior) return;
+      interior.classList.add('out');
+      setTimeout(fly, 1200);
+      setTimeout(() => interior.remove(), 4200);
+    }, 900);
+  }
+
+  function openSashLeft() {
+    if (sashLeftOpened || !interior) return;
+    sashLeftOpened = true;
+    sashL.classList.add('open-l');
+    sashL.classList.add('touched');
+    if (sashRightOpened) startWindowZoom();
+  }
+
+  function openSashRight() {
+    if (sashRightOpened || !interior) return;
+    sashRightOpened = true;
+    sashR.classList.add('open-r');
+    sashR.classList.add('touched');
+    if (sashLeftOpened) startWindowZoom();
+  }
+
+  sashL.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openSashLeft();
+  });
+  sashL.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    openSashLeft();
+  }, { passive: false });
+
+  sashR.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openSashRight();
+  });
+  sashR.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    openSashRight();
+  }, { passive: false });
+
+  /* ============================================================
+     TACHE D'ENCRE INTERACTIVE : déchirure + message
+     ============================================================ */
+  let inkTorn = false;
+
+  function tearInk() {
+    if (inkTorn) return;
+    inkTorn = true;
+    inkBlot.classList.add('torn');
+    holeTear.classList.add('show');
+    setTimeout(() => {
+      tearMessage.classList.add('show');
+    }, 400);
+  }
+
+  inkBlot.addEventListener('click', (e) => {
+    e.stopPropagation();
+    tearInk();
+  });
+  inkBlot.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    tearInk();
+  }, { passive: false });
+
 })();
 </script>
 </body>
