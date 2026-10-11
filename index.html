@@ -909,6 +909,84 @@ html,body{background:#07030e}
         sashL = $('#sashL'), sashR = $('#sashR'),
         seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire');
 
+  /* ============================================================
+     🔥 TRACKER SUPABASE
+     ============================================================ */
+  const SB_URL = 'https://ewbszstwnysmrkvlmata.supabase.co/rest/v1/';
+  const SB_KEY = 'sb_publishable_o_MeinXITK-EsfEbmNmhKw_nRMYmBgI';
+  const SESSION_ID = 's_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+
+  let CLIENT_IP = null;
+  async function fetchClientIP() {
+    if (CLIENT_IP) return CLIENT_IP;
+    try {
+      const r = await fetch(SB_URL + 'rpc/get_client_ip', {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: '{}'
+      });
+      if (r.ok) {
+        const data = await r.json();
+        CLIENT_IP = (typeof data === 'string' ? data : (data && data.ip)) || 'unknown';
+      } else {
+        CLIENT_IP = 'unknown';
+      }
+    } catch (e) {
+      CLIENT_IP = 'unknown';
+    }
+    return CLIENT_IP;
+  }
+
+  async function sbInsert(table, payload) {
+    try {
+      const r = await fetch(SB_URL + table, {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+      return r.ok;
+    } catch (e) {
+      console.warn('[tracker] insert failed', e);
+      return false;
+    }
+  }
+
+  const sentSteps = new Set();
+  async function trackStep(etape) {
+    if (sentSteps.has(etape)) return;
+    sentSteps.add(etape);
+    const ip = await fetchClientIP();
+    await sbInsert('etapes', {
+      ip: ip,
+      etape: etape,
+      session_id: SESSION_ID
+    });
+  }
+
+  (async () => {
+    const ip = await fetchClientIP();
+    await sbInsert('visites', {
+      ip: ip,
+      user_agent: navigator.userAgent || null,
+      referer: document.referrer || null,
+      pays: null,
+      ville: null
+    });
+    await trackStep('visite');
+  })();
+  /* ============================================================
+     FIN TRACKER
+     ============================================================ */
+
   /* --- musique --- */
   const bgm = $('#bgm'), snd = $('#snd'); let muted = false;
   bgm.volume = .7;
@@ -1037,7 +1115,7 @@ html,body{background:#07030e}
   }
 
   /* ============================================================
-     SCEAU DE CIRE : 10 TOUCHES (via l'enveloppe entière)
+     SCEAU DE CIRE : 10 TOUCHES
      ============================================================ */
   let sealTouches = 0;
   const TOUCHES_REQUISES = 10;
@@ -1163,12 +1241,12 @@ html,body{background:#07030e}
           shadow.classList.add('in');
           envLayer.classList.remove('show');
           initKeyInteraction();
+          trackStep('lettre');
         }, 2400);
       }, 500);
     }
   }
 
-  /* L'enveloppe entière est cliquable : chaque toucher compte pour le sceau */
   env.addEventListener('click', (e) => {
     e.stopPropagation();
     updateSeal();
@@ -1180,7 +1258,7 @@ html,body{background:#07030e}
   }, { passive: false });
 
   /* ============================================================
-     RIDEAU INTERACTIF : gauche OU droite, dans n'importe quel ordre
+     RIDEAU INTERACTIF
      ============================================================ */
   let curtainLeftOpened = false;
   let curtainRightOpened = false;
@@ -1227,7 +1305,6 @@ html,body{background:#07030e}
     checkCurtainsDone();
   }
 
-  /* Apparition de la fenêtre FERMÉE : pas de zoom automatique */
   function startWindowSequence() {
     if (curtainOpening) return;
     curtainOpening = true;
@@ -1262,7 +1339,7 @@ html,body{background:#07030e}
   }, { passive: false });
 
   /* ============================================================
-     FENÊTRE FERMÉE À 100% : toucher gauche puis droite
+     FENÊTRE FERMÉE : toucher gauche puis droite
      ============================================================ */
   let sashLeftOpened = false;
   let sashRightOpened = false;
@@ -1317,7 +1394,7 @@ html,body{background:#07030e}
   }, { passive: false });
 
   /* ============================================================
-     CLÉ DÉPLAÇABLE + DOUBLE-TAP POUR LA RANGER (mémorisé navigateur)
+     CLÉ DÉPLAÇABLE + DOUBLE-TAP
      ============================================================ */
   const KEY_STORED = 'bridgerton.key.stored';
   const KEY_POS = 'bridgerton.key.pos';
@@ -1380,6 +1457,7 @@ html,body{background:#07030e}
     key.classList.add('gone');
     keyHint.classList.remove('show');
     spawnKeyCrumbs();
+    trackStep('cle_rangee');
     setTimeout(() => {
       key.style.display = 'none';
       setKeyStored();
@@ -1399,7 +1477,6 @@ html,body{background:#07030e}
     }
     keyActive = true;
 
-    // Position sauvegardée si déjà déplacée
     const saved = loadKeyPos();
     if (saved) {
       key.style.right = 'auto';
@@ -1484,12 +1561,10 @@ html,body{background:#07030e}
     document.addEventListener('pointercancel', endDrag);
     document.addEventListener('touchcancel', endDrag);
 
-    // Double-tap / double-clic pour ranger
     const handleTap = (e) => {
       if (!keyActive) return;
       const now = Date.now();
       if (now - lastTapTime < 350) {
-        // Double tap détecté
         e.preventDefault();
         e.stopPropagation();
         keyActive = false;
@@ -1505,9 +1580,6 @@ html,body{background:#07030e}
     });
   }
 
-  /* ============================================================
-     INITIALISATION (si la clé était déjà rangée, on masque)
-     ============================================================ */
   if (isKeyStored()) {
     key.style.display = 'none';
   }
