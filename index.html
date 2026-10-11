@@ -185,6 +185,53 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .seal svg{display:block;width:100%;height:100%;overflow:visible}
 .open .seal{transform:scale(1.35) rotate(15deg);opacity:0}
 
+/* ---------- SCEAU INTERACTIF (10 TOUCHES, RÉTRÉCISSEMENT + FEU) ---------- */
+.seal{cursor:pointer;pointer-events:auto;
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
+  --seal-scale:1;
+  transform:scale(var(--seal-scale)) rotate(var(--seal-rot,0deg));
+}
+.seal.burn{filter:drop-shadow(0 0 12px rgba(255,120,30,.9)) drop-shadow(0 0 26px rgba(255,60,10,.6)) brightness(1.15)}
+.seal.shake{animation:sealShake .3s ease}
+@keyframes sealShake{0%,100%{transform:scale(var(--seal-scale)) rotate(var(--seal-rot,0deg))}
+20%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) - 6deg)) translate(-3px,2px)}
+40%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) + 6deg)) translate(3px,-2px)}
+60%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) - 4deg)) translate(-2px,-1px)}
+80%{transform:scale(var(--seal-scale)) rotate(calc(var(--seal-rot,0deg) + 4deg)) translate(2px,1px)}}
+
+/* couche des flammes */
+.seal-fire{position:absolute;inset:-60%;pointer-events:none;z-index:8;overflow:visible}
+.flame-p{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
+  background:radial-gradient(circle at 50% 60%,#fffbe0 0,#ffd166 30%,#ff7a18 60%,rgba(200,40,0,0) 85%);
+  filter:blur(.5px);pointer-events:none;
+  animation:flameUp var(--fd,.9s) ease-out forwards}
+@keyframes flameUp{
+  0%{opacity:1;transform:translate(0,0) scale(.5)}
+  40%{opacity:1;transform:translate(var(--fx,0),var(--fy,-30px)) scale(1.2)}
+  100%{opacity:0;transform:translate(calc(var(--fx,0)*1.8),calc(var(--fy,-30px)*2.4)) scale(.3)}
+}
+.spark{position:absolute;left:50%;top:50%;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;
+  background:#ffdf8a;box-shadow:0 0 6px 2px rgba(255,180,60,.9);pointer-events:none;
+  animation:sparkOut var(--sd,1s) ease-out forwards}
+@keyframes sparkOut{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--sx,0),var(--sy,-50px)) scale(.2)}
+}
+
+/* halo de braise sous le sceau */
+.seal-halo{position:absolute;inset:-40%;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(255,110,20,.55) 0%,rgba(255,60,10,.25) 40%,transparent 70%);
+  opacity:0;transition:opacity .4s}
+.seal.hot .seal-halo{opacity:1;animation:haloPulse 1.1s ease-in-out infinite alternate}
+@keyframes haloPulse{from{transform:scale(.9);opacity:.7}to{transform:scale(1.15);opacity:1}}
+
+/* fissures */
+.crack{position:absolute;inset:0;pointer-events:none;z-index:7;opacity:0;transition:opacity .3s}
+.crack.show{opacity:1}
+.crack svg{width:100%;height:100%;overflow:visible}
+.crack path{stroke:#1a0806;stroke-width:1.2;fill:none;stroke-linecap:round}
+.crack path.glow{stroke:rgba(255,140,60,.85);stroke-width:2.2;filter:blur(1.4px)}
+
 /* ---------- LETTRE ---------- */
 #letter{position:fixed;top:0;bottom:0;left:var(--gut);right:var(--gut);z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch;
   opacity:0;pointer-events:none;transition:opacity 1.4s;background:#140a07}
@@ -511,19 +558,19 @@ html,body{background:#07030e}
     <div id="stars"></div>
     <div class="moon"></div>
 
-    <!-- paysage : château sur sa falaise, petite ville au bord du lac -->
+    <!-- paysage -->
     <div class="land">
       <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <path class="mt1" d="M0 185L40 150L80 170L130 120L180 165L230 135L290 170L350 140L400 165V190H0Z"/>
         <path class="mt2" d="M0 190L60 165L120 185L190 160L260 185V200H0Z"/>
         <rect class="lake" x="0" y="185" width="400" height="115"/>
-                </svg>
+      </svg>
     </div>
 
     <svg class="vine l"><use href="#vine"/></svg>
     <svg class="vine r"><use href="#vine"/></svg>
 
-    <!-- balcon : même teinte que le background -->
+    <!-- balcon -->
     <div class="rail">
       <svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true">
         <defs>
@@ -573,7 +620,7 @@ html,body{background:#07030e}
     </button>
   </div>
 
-  <!-- fenêtre du château : cadre, vantaux, rideaux, bougies -->
+  <!-- fenêtre du château -->
   <div class="interior" id="interior">
     <div class="wp w-t"></div><div class="wp w-b"></div><div class="wp w-l"></div><div class="wp w-r"></div>
     <div class="hole">
@@ -617,7 +664,9 @@ html,body{background:#07030e}
       <div class="e-front"><i class="f-l"></i><i class="f-r"></i><i class="f-b"></i></div>
       <div class="e-flap"><i></i></div>
       <div class="e-name">Nosima</div>
-      <div class="seal">
+      <div class="seal" id="seal">
+        <div class="seal-halo"></div>
+        <div class="seal-fire" id="sealFire"></div>
         <svg viewBox="0 0 100 100" aria-hidden="true">
           <defs><radialGradient id="wax" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".55" stop-color="#b8862f"/><stop offset="1" stop-color="#5a3a0e"/></radialGradient></defs>
           <path d="M50 5C64 3 74 11 84 19C96 29 99 45 94 58C93 74 82 91 66 95C54 100 40 98 27 91C13 83 5 68 6 52C7 35 14 21 28 12C34 8 42 6 50 5Z" fill="url(#wax)"/>
@@ -634,6 +683,7 @@ html,body{background:#07030e}
           </g>
           <ellipse cx="32" cy="24" rx="12" ry="6" fill="rgba(255,255,255,.2)" transform="rotate(-35 32 24)"/>
         </svg>
+        <div class="crack" id="crack"></div>
       </div>
     </div>
   </button>
@@ -712,7 +762,8 @@ html,body{background:#07030e}
   const stage = $('#stage'), scene = $('#scene'), pigeon = $('#pigeon'), hint1 = $('#hint1'), hint2 = $('#hint2'),
         interior = $('#interior'), envLayer = $('#envLayer'), env = $('#env'), box = $('#box'),
         letter = $('#letter'), sheet = $('#sheet'), shadow = $('#shadow'),
-        curtainIntro = $('#curtainIntro'), curtainOverlay = $('#curtainOverlay');
+        curtainIntro = $('#curtainIntro'), curtainOverlay = $('#curtainOverlay'),
+        seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire');
 
   /* --- musique --- */
   const bgm = $('#bgm'), snd = $('#snd'); let muted = false;
@@ -838,21 +889,162 @@ html,body{background:#07030e}
     setTimeout(() => layer.remove(), 10500);
   }
 
-  /* --- enveloppe → lettre --- */
-  let opened = false;
-  env.addEventListener('click', () => {
-    if (opened) return; opened = true;
-    hint2.classList.remove('show');
-    box.classList.add('open');
-    goldPetals();
-    setTimeout(() => {
-      startCountdown();
-      letter.classList.add('show');
-      sheet.classList.add('in');
-      shadow.classList.add('in');
-      envLayer.classList.remove('show');
-    }, 2400);
+  /* ============================================================
+     SCEAU DE CIRE : 10 TOUCHES
+     - rétrécit progressivement (scale 1 → 0.35)
+     - effet de feu : flammes + braises + halo + glow
+     - fissures apparaissent progressivement
+     ============================================================ */
+  let sealTouches = 0;
+  const TOUCHES_REQUISES = 10;
+
+  const HINT_TEXTS = [
+    "Touche l'enveloppe",
+    "Encore...",
+    "Encore...",
+    "Ça chauffe...",
+    "Encore...",
+    "La cire fond...",
+    "Encore...",
+    "Ça brûle...",
+    "Encore...",
+    "Presque...",
+    "Dernière fois..."
+  ];
+
+  /* --- flammes --- */
+  function spawnFire(count = 6, power = 1) {
+    for (let i = 0; i < count; i++) {
+      const f = document.createElement('i');
+      f.className = 'flame-p';
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 15 + Math.random() * 35;
+      const size = 8 + Math.random() * 14 * power;
+      f.style.width = f.style.height = size + 'px';
+      f.style.margin = (-size/2) + 'px 0 0 ' + (-size/2) + 'px';
+      f.style.setProperty('--fx', (Math.cos(ang) * dist).toFixed(0) + 'px');
+      f.style.setProperty('--fy', (Math.sin(ang) * dist - 20 - Math.random() * 25).toFixed(0) + 'px');
+      f.style.setProperty('--fd', (0.6 + Math.random() * 0.7).toFixed(2) + 's');
+      sealFire.appendChild(f);
+      setTimeout(() => f.remove(), 1400);
+    }
+    /* braises */
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement('i');
+      s.className = 'spark';
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 25 + Math.random() * 45;
+      s.style.setProperty('--sx', (Math.cos(ang) * dist).toFixed(0) + 'px');
+      s.style.setProperty('--sy', (Math.sin(ang) * dist - 35 - Math.random() * 40).toFixed(0) + 'px');
+      s.style.setProperty('--sd', (0.7 + Math.random() * 0.8).toFixed(2) + 's');
+      sealFire.appendChild(s);
+      setTimeout(() => s.remove(), 1600);
+    }
+  }
+
+  /* --- fissures progressives --- */
+  function updateCracks(n) {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    let svg = crack.querySelector('svg');
+    if (!svg) {
+      svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('viewBox', '0 0 100 100');
+      crack.appendChild(svg);
+    }
+    const paths = [];
+    if (n >= 1) paths.push('M50 38 L47 30 L51 23');
+    if (n >= 2) paths.push('M50 44 L60 40 L68 34');
+    if (n >= 3) paths.push('M50 50 L53 60 L49 70');
+    if (n >= 4) paths.push('M46 46 L38 44 L29 48');
+    if (n >= 5) paths.push('M54 42 L62 52 L60 62');
+    if (n >= 6) paths.push('M40 40 L32 32 L26 24');
+    if (n >= 7) paths.push('M58 58 L68 62 L74 68');
+    if (n >= 8) paths.push('M44 58 L36 64 L30 72');
+    if (n >= 9) paths.push('M62 38 L72 34 L78 26');
+    if (n >= 10) paths.push('M50 20 L50 12 L54 6');
+
+    svg.innerHTML = '';
+    paths.forEach(d => {
+      const p = document.createElementNS(svgNS, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('stroke', '#1a0806');
+      p.setAttribute('stroke-width', '1.2');
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(p);
+      const g = document.createElementNS(svgNS, 'path');
+      g.setAttribute('d', d);
+      g.setAttribute('stroke', 'rgba(255,140,60,.85)');
+      g.setAttribute('stroke-width', '2.2');
+      g.setAttribute('fill', 'none');
+      g.setAttribute('stroke-linecap', 'round');
+      g.setAttribute('filter', 'blur(1.4px)');
+      svg.appendChild(g);
+    });
+    if (paths.length) crack.classList.add('show');
+  }
+
+  function updateSeal() {
+    sealTouches++;
+
+    /* scale progressif : 1 → 0.35 sur 10 touches */
+    const t = sealTouches / TOUCHES_REQUISES;
+    const scale = 1 - t * 0.65; // 1 → 0.35
+    const rot = (Math.random() * 8 - 4) * t;
+    seal.style.setProperty('--seal-scale', scale.toFixed(3));
+    seal.style.setProperty('--seal-rot', rot.toFixed(2) + 'deg');
+
+    /* animation de secousse */
+    seal.classList.add('shake');
+    setTimeout(() => seal.classList.remove('shake'), 320);
+
+    /* effet de feu (croissant) */
+    const power = 0.5 + t * 1.3;
+    spawnFire(4 + Math.floor(t * 8), power);
+
+    /* glow de plus en plus fort */
+    seal.classList.add('burn', 'hot');
+    clearTimeout(seal._burnTO);
+    seal._burnTO = setTimeout(() => seal.classList.remove('burn'), 450);
+
+    /* fissures */
+    updateCracks(sealTouches);
+
+    /* texte d'invite */
+    const idx = Math.min(sealTouches, HINT_TEXTS.length - 1);
+    hint2.querySelector('span').textContent = HINT_TEXTS[idx];
+
+    /* animation "pulse" pour la dernière */
+    if (sealTouches >= TOUCHES_REQUISES) {
+      seal.style.pointerEvents = 'none';
+      hint2.classList.remove('show');
+      /* dernière explosion de feu */
+      spawnFire(30, 2.2);
+      setTimeout(() => {
+        box.classList.add('open');
+        goldPetals();
+        setTimeout(() => {
+          startCountdown();
+          letter.classList.add('show');
+          sheet.classList.add('in');
+          shadow.classList.add('in');
+          envLayer.classList.remove('show');
+        }, 2400);
+      }, 500);
+    }
+  }
+
+  seal.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sealTouches >= TOUCHES_REQUISES) return;
+    updateSeal();
   });
+  seal.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (sealTouches >= TOUCHES_REQUISES) return;
+    updateSeal();
+  }, { passive: false });
 
   /* --- RIDEAU INTERACTIF --- */
   let curtainOpened = false;
