@@ -3,24 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#10091f">
+<meta name="theme-color" content="#080411">
 <title>Roxane 😂✨</title>
 <style>
-  :root { --pink:#ff4fb8; --violet:#9b5cff; --cyan:#6ef6ff; --gold:#ffe49b; }
+  :root { --pink:#c9a0ff; --violet:#7d3fc4; --cyan:#c7a9ff; --gold:#e8c878; --paper:#d9c28d; }
   * { box-sizing:border-box; }
   html,body { margin:0; min-height:100%; }
   body {
     min-height:100svh; overflow:hidden; display:grid; place-items:center;
-    color:#fff; font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+    color:#f2dfb0; font-family: Georgia, "Times New Roman", serif;
     background:
-      radial-gradient(ellipse at 18% 18%, #52256c 0, transparent 36%),
-      radial-gradient(ellipse at 85% 80%, #153d67 0, transparent 40%),
-      linear-gradient(145deg,#090615 0%,#1c0d32 52%,#080d20 100%);
+      radial-gradient(ellipse at 12% 16%, #381653 0, transparent 35%),
+      radial-gradient(ellipse at 90% 82%, #251044 0, transparent 42%),
+      radial-gradient(ellipse at 50% 48%, #1b0b30 0, transparent 60%),
+      linear-gradient(145deg,#05030a 0%,#10071d 48%,#07030d 100%);
     isolation:isolate;
   }
   body::before, body::after {
     content:""; position:fixed; inset:-30%; z-index:-2; pointer-events:none;
-    background:conic-gradient(from 0deg,transparent 0 20%,#ff4fb81b 26%,transparent 33% 48%,#6ef6ff18 55%,transparent 63% 80%,#9b5cff24 87%,transparent 94%);
+    background:conic-gradient(from 0deg,transparent 0 20%,#d5a6ff12 26%,transparent 33% 48%,#9c5bdb12 55%,transparent 63% 80%,#b78aef20 87%,transparent 94%);
     filter:blur(45px); animation:rotateGlow 22s linear infinite;
   }
   body::after { animation-direction:reverse; animation-duration:31s; opacity:.7; transform:scale(.8); }
@@ -34,41 +35,49 @@
   .card {
     position:relative; width:min(100%,650px); padding:clamp(28px,7vw,56px) clamp(20px,6vw,46px);
     text-align:center; border-radius:30px;
-    background:linear-gradient(135deg,#ffffff15,#ffffff06);
-    border:1px solid #ffffff35; box-shadow:0 0 45px #b04cff24, inset 0 0 30px #ffffff08;
-    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    background:
+      radial-gradient(ellipse at 14% 10%,rgba(255,222,153,.13),transparent 35%),
+      radial-gradient(ellipse at 85% 90%,rgba(35,8,30,.48),transparent 45%),
+      repeating-linear-gradient(7deg,rgba(255,239,193,.025) 0 1px,transparent 1px 4px),
+      linear-gradient(145deg,#39213b 0%,#25132d 48%,#160b20 100%);
+    border:1px solid rgba(224,190,112,.72); border-radius:5px;
+    box-shadow:0 18px 65px #000b,0 0 38px #8b4bbd20,inset 0 0 0 5px rgba(5,2,10,.45),inset 0 0 0 7px rgba(216,177,97,.15),inset 0 0 35px #0007;
+    backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
     animation:cardEnter 1s cubic-bezier(.2,.8,.2,1) both, cardFloat 5s ease-in-out 1s infinite;
   }
   .card::before { content:""; position:absolute; inset:-2px; border-radius:32px; padding:2px;
-    background:linear-gradient(120deg,var(--pink),transparent 35%,var(--cyan),transparent 70%,var(--gold));
+    background:linear-gradient(120deg,var(--gold),transparent 35%,#a879d5,transparent 70%,var(--gold));
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude;
     pointer-events:none; opacity:.8; }
   @keyframes cardEnter { from { opacity:0; transform:translateY(35px) scale(.92) rotateX(8deg); } to { opacity:1; transform:translateY(0) scale(1) rotateX(0); } }
   @keyframes cardFloat { 0%,100% { translate:0 0; } 50% { translate:0 -7px; } }
   .eyebrow { display:inline-flex; align-items:center; gap:8px; padding:8px 13px; margin-bottom:24px;
-    border:1px solid #ffffff35; border-radius:999px; color:#ffe7fb; background:#ffffff0c;
+    border:1px solid #d5b66b80; border-radius:2px; color:#f0d79d; background:#08040b65;
     font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; }
   .spark { display:inline-block; animation:twinkle .55s ease-in-out infinite alternate; }
   @keyframes twinkle { to { transform:rotate(35deg) scale(1.35); filter:drop-shadow(0 0 7px white); } }
   h1 { margin:0; font-weight:900; font-size:clamp(2rem,8.5vw,4.45rem); line-height:1.14; letter-spacing:-.055em; text-wrap:balance; }
   .line { display:block; }
-  .gradient { color:transparent; background:linear-gradient(90deg,#fff 0%,#ffb6e8 30%,#a8faff 65%,#ffe9a8 100%); background-size:220% auto;
+  .gradient { color:transparent; background:linear-gradient(90deg,#fff0c4 0%,#d7b4ff 30%,#f5e2b0 65%,#fff0c4 100%); background-size:220% auto;
     -webkit-background-clip:text; background-clip:text; animation:shine 1.15s linear infinite; }
   @keyframes shine { to { background-position:220% center; } }
-  .name { display:inline-block; color:#fff; text-shadow:0 0 12px #ff4fb8,0 0 32px #ff4fb86e; animation:namePulse .72s ease-in-out infinite; }
-  @keyframes namePulse { 50% { text-shadow:0 0 20px #ff4fb8,0 0 48px #ff4fb8a8; transform:scale(1.035); } }
+  .name { display:inline-block; color:#fff0c9; text-shadow:0 0 10px #d4a85c,0 0 28px #a66ad866; animation:namePulse .52s ease-in-out infinite; }
+  @keyframes namePulse { 50% { text-shadow:0 0 18px #f0d28b,0 0 40px #b77de5b0; transform:scale(1.035); } }
   .emoji-row { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin:27px 0 22px; font-size:clamp(1.8rem,7vw,3rem); }
   .emoji-row span { display:inline-block; filter:drop-shadow(0 0 9px #ffffff30); animation:emojiBounce 1.3s ease-in-out infinite; }
   .emoji-row span:nth-child(2n) { animation-delay:-.3s; }
   .emoji-row span:nth-child(3n) { animation-delay:-.65s; }
   @keyframes emojiBounce { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-10px) rotate(8deg); } }
-  .sub { color:#e9ddf7; font-size:.95rem; margin:0; opacity:.86; }
-  .button { margin-top:25px; border:1px solid #ffffff55; color:#fff; background:linear-gradient(100deg,#ff4fb8,#895bff 60%,#31c9ed);
+  .sub { color:#e5d2ae; font-size:.95rem; margin:0; opacity:.9; font-style:italic; }
+  .button { margin-top:25px; border:1px solid #e9cf83; color:#fff0c8; background:linear-gradient(135deg,#5c2a7d,#301442 58%,#171020);
     border-radius:999px; padding:13px 21px; font:700 1rem inherit; font-family:inherit; cursor:pointer;
-    box-shadow:0 8px 28px #a33cff44; transition:transform .2s,filter .2s; -webkit-tap-highlight-color:transparent; }
+    box-shadow:0 5px 24px #0008,inset 0 0 0 1px #ffffff0a,0 0 20px #a46bdc24; transition:transform .2s,filter .2s; -webkit-tap-highlight-color:transparent; letter-spacing:.02em; }
   .button:active { transform:scale(.96); filter:brightness(1.2); }
   .button:hover { transform:translateY(-2px); filter:brightness(1.12); }
-  .footer { position:fixed; bottom:max(12px,env(safe-area-inset-bottom)); left:0; right:0; text-align:center; color:#d7c8e8a8; font-size:.72rem; letter-spacing:.08em; }
+  .footer { position:fixed; bottom:max(10px,env(safe-area-inset-bottom)); left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:5px; padding:0 12px; text-align:center; pointer-events:none; }
+  .footer-label { color:#d9bf83b8; font-size:.58rem; letter-spacing:.15em; text-shadow:0 0 12px #c18ce644; }
+  .signature { color:#f5dfb2; font-size:clamp(.82rem,3.4vw,1.05rem); font-style:italic; font-weight:bold; letter-spacing:.025em; text-shadow:0 0 5px #f2d58a,0 0 13px #a66de3,0 0 24px #7d3fc4; animation:signatureGlow .7s ease-in-out infinite alternate; }
+  @keyframes signatureGlow { from { filter:brightness(.9); text-shadow:0 0 4px #f2d58a,0 0 10px #a66de3; } to { filter:brightness(1.25); text-shadow:0 0 8px #fff0c8,0 0 18px #c9a0ff,0 0 28px #7d3fc4; } }
   .burst { position:fixed; z-index:5; pointer-events:none; font-size:24px; animation:burst 1.2s ease-out forwards; }
   @keyframes burst { 0% { opacity:1; transform:translate(0,0) scale(.5) rotate(0); } 100% { opacity:0; transform:translate(var(--dx),var(--dy)) scale(1.5) rotate(var(--rot)); } }
 
@@ -76,7 +85,7 @@
   #floatingKey {
     position:fixed; z-index:2; left:4%; top:13%; width:clamp(112px,31vw,205px);
     cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
-    filter:drop-shadow(0 0 10px #ffe49b88) drop-shadow(0 0 26px #ffbf4a55);
+    filter:drop-shadow(0 0 9px #e8c87888) drop-shadow(0 0 25px #a66de355);
     opacity:.88; animation:keyDrift 4.2s ease-in-out infinite;
   }
   #floatingKey:active { cursor:grabbing; }
@@ -85,15 +94,47 @@
   @keyframes keyDrift { 0%,100% { transform:translateY(0) rotate(-8deg); } 50% { transform:translateY(-18px) rotate(3deg); } }
   @keyframes keyGlint { from { opacity:.35; } to { opacity:1; } }
   .drag-hint { position:fixed; z-index:2; left:12px; bottom:34px; padding:7px 10px; border-radius:20px;
-    color:#f9eaff; font-size:11px; letter-spacing:.04em; background:#ffffff12; border:1px solid #ffffff30;
+    color:#f0d9a0; font-size:11px; letter-spacing:.04em; background:#13091ed9; border:1px solid #d6b76b66;
     backdrop-filter:blur(8px); pointer-events:none; animation:hintFade 5s ease 2s forwards; }
   @keyframes hintFade { to { opacity:0; } }
   @media (max-width:420px) { #floatingKey { width:clamp(100px,29vw,145px); left:2%; top:10%; } }
+
+  /* Bougies anciennes, lumière chaude sur la pierre sombre */
+  .candle { position:fixed; z-index:1; width:18px; height:82px; pointer-events:none; opacity:.96; }
+  .candle .wax { position:absolute; left:0; right:0; bottom:0; height:52px; border-radius:4px 4px 2px 2px;
+    background:linear-gradient(90deg,#746044,#e4d2a2 28%,#fff0ca 48%,#c4ad7c 75%,#695235);
+    box-shadow:inset 0 0 5px #4d351c,0 4px 12px #0008; }
+  .candle .wax:before { content:""; position:absolute; top:-3px; left:1px; width:16px; height:7px; border-radius:50%; background:#e8d8b0; }
+  .candle .flame { position:absolute; left:50%; bottom:49px; width:10px; height:22px; margin-left:-5px;
+    border-radius:50% 50% 50% 50%/65% 65% 35% 35%; transform-origin:50% 100%;
+    background:radial-gradient(ellipse at 50% 70%,#fffde6 0,#ffd16b 42%,#ff8b36 65%,transparent 78%);
+    filter:drop-shadow(0 0 7px #ffb44e); animation:candleFlick .19s ease-in-out infinite alternate; }
+  .candle .glow { position:absolute; left:50%; bottom:-47px; width:170px; height:170px; margin-left:-85px;
+    background:radial-gradient(circle,rgba(255,168,66,.25),rgba(255,139,50,.08) 40%,transparent 72%); animation:candleGlow 2.1s ease-in-out infinite alternate; }
+  @keyframes candleFlick { from { transform:scale(1) rotate(-3deg); } to { transform:scale(.86,1.12) rotate(3deg); } }
+  @keyframes candleGlow { from { opacity:.55; } to { opacity:1; } }
+  .candle.left { left:clamp(9px,4vw,32px); bottom:28px; transform:scale(.9); transform-origin:bottom left; }
+  .candle.right { right:clamp(9px,4vw,32px); bottom:28px; transform:scale(.9); transform-origin:bottom right; }
+  .candle.top-left { left:clamp(12px,5vw,38px); top:28px; transform:scale(.65); transform-origin:top left; }
+  .candle.top-right { right:clamp(12px,5vw,38px); top:28px; transform:scale(.65); transform-origin:top right; }
+  .aged-paper { position:fixed; z-index:-1; width:clamp(140px,34vw,290px); height:clamp(190px,42vh,370px); pointer-events:none; opacity:.19;
+    background:radial-gradient(ellipse at 18% 15%,#fff1c2 0,transparent 30%),radial-gradient(ellipse at 82% 86%,#4d2b24 0,transparent 42%),
+      repeating-linear-gradient(3deg,rgba(88,48,22,.12) 0 1px,transparent 1px 5px),linear-gradient(135deg,#b99b64,#e3d0a0 35%,#a9824e 100%);
+    border:1px solid #c5a765; box-shadow:0 15px 50px #0009,inset 0 0 30px #5b351c55; filter:sepia(.35); }
+  .aged-paper:after { content:""; position:absolute; inset:9px; border:1px solid #5e3d2670; }
+  .aged-paper.one { left:-85px; top:18%; transform:rotate(-17deg); }
+  .aged-paper.two { right:-95px; bottom:12%; transform:rotate(13deg); }
+  @media (max-width:420px) { .candle.left,.candle.right { bottom:35px; transform:scale(.72); } .candle.top-left,.candle.top-right { transform:scale(.5); } .aged-paper { opacity:.13; } }
 
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; } }
 </style>
 </head>
 <body>
+<div class="aged-paper one" aria-hidden="true"></div><div class="aged-paper two" aria-hidden="true"></div>
+<div class="candle left" data-candle aria-hidden="true"><i class="glow"></i><i class="flame"></i><i class="wax"></i></div>
+<div class="candle right" data-candle aria-hidden="true"><i class="glow"></i><i class="flame"></i><i class="wax"></i></div>
+<div class="candle top-left" data-candle aria-hidden="true"><i class="glow"></i><i class="flame"></i><i class="wax"></i></div>
+<div class="candle top-right" data-candle aria-hidden="true"><i class="glow"></i><i class="flame"></i><i class="wax"></i></div>
 
 <aside id="floatingKey" aria-label="Clé royale décorative déplaçable" title="Déplace-moi !" tabindex="0">
   <svg viewBox="0 0 100 240" role="img" aria-label="Grande clé dorée ornée">
@@ -125,7 +166,7 @@
 <div class="aurora a"></div><div class="aurora b"></div>
 <main>
   <section class="card" aria-label="Message pour Roxane">
-    <div class="eyebrow"><span class="spark">✦</span> Autorisation officielle <span class="spark">✦</span></div>
+    <div class="eyebrow"><span class="spark">✦</span> Décret royal officiel <span class="spark">✦</span></div>
     <h1>
       <span class="line">Bien sûr que</span>
       <span class="line gradient">tu peux poster</span>
@@ -139,13 +180,13 @@
     <button class="button" id="celebrate" type="button">Appuie pour célébrer ✨</button>
   </section>
 </main>
-<div class="footer">DÉCRET ROYAL • STORY APPROUVÉE 👑</div>
+<div class="footer"><span class="footer-label">ARCHIVES ROYALES • STORY APPROUVÉE 👑</span><span class="signature">J'adore mon humour 😭😭😭😂😂💔</span></div>
 <script>
 (() => {
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let w, h, dpr, particles = [];
-  const colors = ['#ff73c8','#8f7cff','#75f5ff','#ffe49b','#ffffff'];
+  const colors = ['#d5a6ff','#a66de3','#e8c878','#fff0c8','#ffffff'];
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     w = innerWidth; h = innerHeight;
