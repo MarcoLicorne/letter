@@ -56,7 +56,7 @@
     font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; }
   .spark { display:inline-block; animation:twinkle .55s ease-in-out infinite alternate; }
   @keyframes twinkle { to { transform:rotate(35deg) scale(1.35); filter:drop-shadow(0 0 7px white); } }
-  h1 { margin:0; font-weight:900; font-size:clamp(2rem,8.5vw,4.45rem); line-height:1.14; letter-spacing:-.055em; text-wrap:balance; }
+  h1 { margin:0; font-weight:900; font-size:clamp(1.55rem,6.2vw,3.25rem); line-height:1.14; letter-spacing:-.055em; text-wrap:balance; }
   .line { display:block; }
   .gradient { color:transparent; background:linear-gradient(90deg,#fff0c4 0%,#d7b4ff 30%,#f5e2b0 65%,#fff0c4 100%); background-size:220% auto;
     -webkit-background-clip:text; background-clip:text; animation:shine 1.15s linear infinite; }
@@ -126,6 +126,17 @@
   .aged-paper.two { right:-95px; bottom:12%; transform:rotate(13deg); }
   @media (max-width:420px) { .candle.left,.candle.right { bottom:35px; transform:scale(.72); } .candle.top-left,.candle.top-right { transform:scale(.5); } .aged-paper { opacity:.13; } }
 
+  /* Compteur persistant, avec une tache qui masque le nombre de jours */
+  .counter-wrap { margin-top:24px; display:flex; justify-content:center; width:100%; }
+  .counter { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:5px; color:#f5dfb2;
+    font-size:clamp(.9rem,3.5vw,1.15rem); letter-spacing:.035em; text-shadow:0 0 9px #c9a0ff80; }
+  .counter-unit { white-space:nowrap; }
+  .days-unit { position:relative; display:inline-flex; align-items:center; gap:5px; }
+  .day-smudge { position:absolute; left:-4px; top:50%; transform:translateY(-52%) rotate(-9deg); width:2.4em; height:1.25em;
+    border-radius:44% 56% 53% 47% / 48% 42% 58% 52%;
+    background:radial-gradient(ellipse at 35% 35%,#080411 0%,#10071d 55%,#1a0b28 78%,#080411 100%);
+    box-shadow:0 0 2px 2px #0b0514,0 0 8px #080411; z-index:2; pointer-events:none; }
+  .counter-label { color:#d9bf83; font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; margin-bottom:8px; }
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; } }
 </style>
 </head>
@@ -178,11 +189,41 @@
     </div>
     <p class="sub">Décision validée à l’unanimité. Aucun recours possible. ✨</p>
     <button class="button" id="celebrate" type="button">Appuie si toi aussi tu adores mon humour😭😭</button>
+    <div class="counter-wrap" aria-label="Compteur de temps écoulé">
+      <div class="counter">
+        <span class="days-unit"><span id="days">0</span><span class="counter-unit">jours</span><span class="day-smudge" aria-hidden="true"></span></span>
+        <span class="counter-unit" id="hours">23h</span>
+        <span class="counter-unit" id="minutes">12min</span>
+        <span class="counter-unit" id="seconds">7s</span>
+      </div>
+    </div>
   </section>
 </main>
 <div class="footer"><span class="footer-label">GARDE BIEN  • LA CLÉ POUR MOI 👑</span><span class="signature">J'adore mon humour 😭😭😭😂😂💔</span></div>
 <script>
 (() => {
+  // Le compteur conserve son origine dans ce navigateur et continue même après fermeture.
+  const COUNTER_KEY = 'roxane_royal_counter_start_v1';
+  let counterStart = Number(localStorage.getItem(COUNTER_KEY));
+  if (!Number.isFinite(counterStart) || counterStart <= 0) {
+    // Point de départ visuel : 23 h 12 min 7 s, puis le compteur avance sans limite.
+    counterStart = Date.now() - (23 * 3600 + 12 * 60 + 7) * 1000;
+    localStorage.setItem(COUNTER_KEY, String(counterStart));
+  }
+  function updateCounter() {
+    const elapsed = Math.max(0, Math.floor((Date.now() - counterStart) / 1000));
+    const days = Math.floor(elapsed / 86400);
+    const hours = Math.floor((elapsed % 86400) / 3600);
+    const minutes = Math.floor((elapsed % 3600) / 60);
+    const seconds = elapsed % 60;
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = hours + 'h';
+    document.getElementById('minutes').textContent = minutes + 'min';
+    document.getElementById('seconds').textContent = seconds + 's';
+  }
+  updateCounter();
+  setInterval(updateCounter, 1000);
+
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let w, h, dpr, particles = [];
