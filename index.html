@@ -910,31 +910,43 @@ html,body{background:#07030e}
         seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire');
 
   /* ============================================================
-     🔥 TRACKER SUPABASE
+     🔥 TRACKER SUPABASE (robuste)
+     - 1 visitor_id persistant (localStorage)
+     - 1 session_id unique par ouverture
+     - 1 seule ligne "visites" par session
+     - étapes uniques par visiteur
      ============================================================ */
   const SB_URL = 'https://ewbszstwnysmrkvlmata.supabase.co/rest/v1/';
   const SB_KEY = 'sb_publishable_o_MeinXITK-EsfEbmNmhKw_nRMYmBgI';
+
+  function getVisitorId() {
+    try {
+      let v = localStorage.getItem('nosima.visitor_id');
+      if (!v) {
+        if (crypto && crypto.randomUUID) {
+          v = 'v_' + crypto.randomUUID();
+        } else {
+          v = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+        }
+        localStorage.setItem('nosima.visitor_id', v);
+      }
+      return v;
+    } catch (e) {
+      return 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    }
+  }
+  const VISITOR_ID = getVisitorId();
   const SESSION_ID = 's_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 
   let CLIENT_IP = null;
   async function fetchClientIP() {
     if (CLIENT_IP) return CLIENT_IP;
     try {
-      const r = await fetch(SB_URL + 'rpc/get_client_ip', {
-        method: 'POST',
-        headers: {
-          'apikey': SB_KEY,
-          'Authorization': 'Bearer ' + SB_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: '{}'
-      });
+      const r = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
       if (r.ok) {
-        const data = await r.json();
-        CLIENT_IP = (typeof data === 'string' ? data : (data && data.ip)) || 'unknown';
-      } else {
-        CLIENT_IP = 'unknown';
-      }
+        const d = await r.json();
+        CLIENT_IP = d.ip || 'unknown';
+      } else CLIENT_IP = 'unknown';
     } catch (e) {
       CLIENT_IP = 'unknown';
     }
@@ -949,7 +961,7 @@ html,body{background:#07030e}
           'apikey': SB_KEY,
           'Authorization': 'Bearer ' + SB_KEY,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=minimal,resolution=merge-duplicates'
         },
         body: JSON.stringify(payload)
       });
@@ -960,29 +972,38 @@ html,body{background:#07030e}
     }
   }
 
+  // 1 seule visite par session (garde-fou sessionStorage)
+  const VISIT_KEY = 'nosima.tracked.' + SESSION_ID;
+  (async () => {
+    try {
+      if (sessionStorage.getItem(VISIT_KEY)) return;
+      sessionStorage.setItem(VISIT_KEY, '1');
+      const ip = await fetchClientIP();
+      await sbInsert('visites', {
+        visitor_id: VISITOR_ID,
+        session_id: SESSION_ID,
+        ip: ip,
+        user_agent: navigator.userAgent || null,
+        referer: document.referrer || null
+      });
+    } catch (e) { /* silencieux */ }
+  })();
+
+  // Étapes : idempotent côté client + contrainte unique côté DB
   const sentSteps = new Set();
   async function trackStep(etape) {
     if (sentSteps.has(etape)) return;
     sentSteps.add(etape);
-    const ip = await fetchClientIP();
-    await sbInsert('etapes', {
-      ip: ip,
-      etape: etape,
-      session_id: SESSION_ID
-    });
+    try {
+      const lsKey = 'nosima.step.' + etape;
+      if (localStorage.getItem(lsKey) === '1') return;
+      localStorage.setItem(lsKey, '1');
+      await sbInsert('etapes', {
+        visitor_id: VISITOR_ID,
+        etape: etape
+      });
+    } catch (e) { /* silencieux */ }
   }
-
-  (async () => {
-    const ip = await fetchClientIP();
-    await sbInsert('visites', {
-      ip: ip,
-      user_agent: navigator.userAgent || null,
-      referer: document.referrer || null,
-      pays: null,
-      ville: null
-    });
-    await trackStep('visite');
-  })();
   /* ============================================================
      FIN TRACKER
      ============================================================ */
