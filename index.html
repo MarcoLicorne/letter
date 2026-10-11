@@ -430,7 +430,7 @@ html,body{background:#07030e}
 #curtainIntro.opening{pointer-events:none}
 .curtain-overlay{position:absolute;inset:0;display:flex;pointer-events:auto;transition:opacity .5s}
 .curtain-overlay.hidden{pointer-events:none;opacity:0}
-/* --- ouverture fluide des rideaux : glissement indépendant + ombre qui s'estompe --- */
+/* --- ouverture fluide des rideaux --- */
 .curtain-panel{position:absolute;top:0;bottom:0;width:50%;z-index:2;
   background:
     repeating-linear-gradient(90deg,#2a0610 0 10px,#6a1228 10px 22px,#390814 22px 30px,#5a1028 30px 40px),
@@ -455,7 +455,6 @@ html,body{background:#07030e}
   transition:opacity .5s,transform 1.6s cubic-bezier(.22,.61,.36,1)}
 .curtain-tassel.l{left:calc(50% - 22px);transform:translateX(-50%)}
 .curtain-tassel.r{left:calc(50% + 22px);transform:translateX(-50%)}
-/* les glands suivent les rideaux */
 #curtainIntro.opening .curtain-tassel.l,
 .curtain-tassel.l.away{transform:translateX(-50%) translateX(-52vw)}
 #curtainIntro.opening .curtain-tassel.r,
@@ -463,26 +462,6 @@ html,body{background:#07030e}
 #curtainIntro.opening .curtain-tassel{opacity:0}
 .curtain-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(circle at 50% 50%,rgba(255,200,130,.15),transparent 60%)}
-
-/* ---------- TACHE D'ENCRE INTERACTIVE ---------- */
-.ink-blot{position:relative;cursor:pointer;pointer-events:auto;z-index:5}
-.ink-blot .ink{pointer-events:none}
-.tear-message{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-8deg) scale(0);
-  z-index:10;font-family:'Homemade Apple','Cormorant Garamond',cursive;font-style:normal;
-  font-size:clamp(14px,3.8vw,18px);color:#f0d27a;text-align:center;line-height:1.4;
-  text-shadow:0 0 20px rgba(230,180,80,.9),0 2px 6px rgba(0,0,0,.9);
-  opacity:0;transition:transform .8s cubic-bezier(.34,1.56,.64,1),opacity .6s;
-  white-space:nowrap;pointer-events:none}
-.tear-message.show{transform:translate(-50%,-50%) rotate(-8deg) scale(1);opacity:1}
-.hole-tear{position:absolute;border-radius:50%;background:radial-gradient(circle,#0a0512 0,#06030a 60%,transparent 75%);
-  pointer-events:none;z-index:4;opacity:0;transform:scale(0);
-  transition:opacity .6s,transform .8s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:inset 0 0 20px rgba(0,0,0,.9)}
-.hole-tear.show{opacity:1;transform:scale(1)}
-.hole-tear::after{content:'';position:absolute;inset:-4px;border-radius:50%;
-  background:radial-gradient(circle,transparent 40%,rgba(0,0,0,.4) 60%,transparent 75%)}
-.ink-blot.torn{cursor:default}
-.ink-blot.torn .ink{opacity:.3;transition:opacity .8s}
 </style>
 </head>
 <body>
@@ -736,7 +715,7 @@ html,body{background:#07030e}
           <p class="t">Selon les lois anciennes du royaume, toute clé confiée doit être restituée avant le :</p>
           <div class="cd">
             <div class="u">
-              <span class="days ink-blot" id="inkBlot">
+              <span class="days">
                 <svg class="ink" viewBox="0 0 130 80" aria-hidden="true">
                   <defs>
                     <filter id="rag" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter>
@@ -755,8 +734,6 @@ html,body{background:#07030e}
                     <path d="M16 46C8 52 4 58 3 64" fill="none" stroke="#0a0612" stroke-width="2.2" stroke-linecap="round"/>
                   </g>
                 </svg>
-                <div class="hole-tear" id="holeTear"></div>
-                <div class="tear-message" id="tearMessage">L'encre était encore humide</div>
               </span><span class="lb">Jours</span>
             </div>
             <div class="u"><b id="h">2</b><span class="lb">h</span></div>
@@ -793,8 +770,7 @@ html,body{background:#07030e}
         curtainTasselL = $('#curtainTasselL'), curtainTasselR = $('#curtainTasselR'),
         curtainHint = $('#curtainHint'),
         sashL = $('#sashL'), sashR = $('#sashR'),
-        seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire'),
-        inkBlot = $('#inkBlot'), holeTear = $('#holeTear'), tearMessage = $('#tearMessage');
+        seal = $('#seal'), crack = $('#crack'), sealFire = $('#sealFire');
 
   /* --- musique --- */
   const bgm = $('#bgm'), snd = $('#snd'); let muted = false;
@@ -1064,13 +1040,11 @@ html,body{background:#07030e}
 
   /* ============================================================
      RIDEAU INTERACTIF : gauche OU droite, dans n'importe quel ordre
-     La séquence continue dès que les DEUX sont ouverts
      ============================================================ */
   let curtainLeftOpened = false;
   let curtainRightOpened = false;
   let curtainOpening = false;
 
-  /* Met à jour le texte d'invite selon ce qui reste à ouvrir */
   function updateCurtainHint() {
     if (curtainLeftOpened && curtainRightOpened) return;
     if (!curtainLeftOpened && !curtainRightOpened) {
@@ -1084,7 +1058,6 @@ html,body{background:#07030e}
 
   function checkCurtainsDone() {
     if (curtainLeftOpened && curtainRightOpened && !curtainOpening) {
-      /* Les deux rideaux sont ouverts : on efface le texte et on enchaîne */
       curtainHint.style.opacity = '0';
       curtainHint.style.transition = 'opacity .5s';
       const center = curtainIntro.querySelector('.curtain-center');
@@ -1122,7 +1095,6 @@ html,body{background:#07030e}
     setTimeout(() => { stage.classList.add('night'); }, 3200);
     setTimeout(() => {
       interior.classList.add('opening');
-      /* Afficher le texte "Touche les fenêtres" */
       setTimeout(() => hintWin.classList.add('show'), 1200);
     }, 6600);
     setTimeout(() => { curtainIntro.style.display = 'none'; }, 2600);
@@ -1150,7 +1122,6 @@ html,body{background:#07030e}
 
   /* ============================================================
      FENÊTRE FERMÉE À 100% : toucher gauche puis droite
-     Le zoom ne démarre qu'après les DEUX ouvertures
      ============================================================ */
   let sashLeftOpened = false;
   let sashRightOpened = false;
@@ -1202,31 +1173,6 @@ html,body{background:#07030e}
     e.stopPropagation();
     e.preventDefault();
     openSashRight();
-  }, { passive: false });
-
-  /* ============================================================
-     TACHE D'ENCRE INTERACTIVE : déchirure + message
-     ============================================================ */
-  let inkTorn = false;
-
-  function tearInk() {
-    if (inkTorn) return;
-    inkTorn = true;
-    inkBlot.classList.add('torn');
-    holeTear.classList.add('show');
-    setTimeout(() => {
-      tearMessage.classList.add('show');
-    }, 400);
-  }
-
-  inkBlot.addEventListener('click', (e) => {
-    e.stopPropagation();
-    tearInk();
-  });
-  inkBlot.addEventListener('touchstart', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    tearInk();
   }, { passive: false });
 
 })();
